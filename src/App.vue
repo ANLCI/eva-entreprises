@@ -1,17 +1,11 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import { ref, watch } from 'vue'
 
 const logoText = ['ANLCI']
 const serviceTitle = 'EVA - Entreprises'
 const serviceDescription = "Outil d’évaluation pour la gestion des situations d’illettrisme en milieu professionnel"
 const placeholder = ''
 const homeTo = '/'
-
-const search = ref('')
-watch(search, (newValue) => {
-  console.log('search', newValue)
-})
 </script>
 
 <template>
