@@ -1,22 +1,27 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterView } from 'vue-router'
+import { ref, watch } from 'vue'
+
+const logoText = ['ANLCI']
+const serviceTitle = 'EVA - Entreprises'
+const serviceDescription = "Outil d’évaluation pour la gestion des situations d’illettrisme en milieu professionnel"
+const placeholder = ''
+const homeTo = '/'
+
+const search = ref('')
+watch(search, (newValue) => {
+  console.log('search', newValue)
+})
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/form">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
+  <DsfrHeader
+    :logo-text
+    :service-title
+    :service-description
+    :placeholder
+    :home-to
+  />
   <RouterView />
 </template>
 
