@@ -10,6 +10,11 @@ export default defineConfig({
     vue(),
     vueDevTools(),
   ],
+  css: {
+    lightningcss: {
+      errorRecovery: true, // Enables error recovery to ignore invalid CSS
+    },
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
