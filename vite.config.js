@@ -12,7 +12,7 @@ export default defineConfig({
   ],
   css: {
     lightningcss: {
-      errorRecovery: true, // Enables error recovery to ignore invalid CSS
+      errorRecovery: true,
     },
   },
   resolve: {
