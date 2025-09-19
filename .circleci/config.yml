@@ -4,6 +4,9 @@ executors:
   node-executor:
     docker:
       - image: cimg/node:20.19
+  playwright-executor:
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.55.0
     environment:
       VITE_API_BASE_URL: https://prepro.eva.anlci.gouv.fr/api
       VITE_ID_QUESTIONNAIRE_EVA_ENTREPRISES: "de47df57-093b-4210-aee2-ce84c4c8cedb"
@@ -47,13 +50,17 @@ jobs:
           command: npm run test:unit
 
   e2e-test:
-    executor: node-executor
+    executor: playwright-executor
     steps:
       - checkout
       - restore_node_modules_cache
-      - run:
-          name: Run e2e tests
-          command: npm run test:e2e
+      - run: npm install -D @playwright/test && npx playwright install --with-deps
+      - run: npx playwright test
+      - store_artifacts:
+          path: ./playwright-report
+          destination: playwright-report-first
+      - store_artifacts:
+          path: /tmp/artifacts
 
   lint:
     executor: node-executor
