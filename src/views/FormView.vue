@@ -7,7 +7,7 @@ import { fetchQuestionnaire } from './../services/questionnaireService'
 
 const router = useRouter()
 
-const idQuestionnaireEvaEntreprises = import.meta.env.VITE_ID_QUESTIONNAIRE_EVA_ENTREPRISES;
+const idQuestionnaireEvaEntreprises = import.meta.env.VITE_ID_QUESTIONNAIRE_EVA_ENTREPRISES
 const { data, error, isFetching } = useQuery({
   queryKey: ['repoData'],
   queryFn: () => fetchQuestionnaire(idQuestionnaireEvaEntreprises),
@@ -26,7 +26,7 @@ const selectedAnswer = computed({
   },
   set: (value) => {
     answers.value[currentQuestion.value.nom_technique] = value
-  }
+  },
 })
 
 const nextQuestion = () => {
@@ -65,7 +65,7 @@ const labelBoutonSuivant = computed(() => {
 </script>
 
 <template>
-  <div class="fr-container ">
+  <div class="fr-container">
     <div v-if="isFetching" class="loader">
       <EvaSpinner />
     </div>
@@ -78,7 +78,7 @@ const labelBoutonSuivant = computed(() => {
     </div>
     <div v-else-if="data">
       <div>Question {{ currentQuestionIndex + 1 }}/{{ data.length }}</div>
-      <br>
+      <br />
       <div v-if="currentQuestion">
         <DsfrRadioButtonSet
           v-model="selectedAnswer"
@@ -107,24 +107,21 @@ const labelBoutonSuivant = computed(() => {
       </div>
     </div>
     <div v-else>
-      <DsfrAlert
-        type="warning"
-        title="Pas de question disponible"
-      />
+      <DsfrAlert type="warning" title="Pas de question disponible" />
     </div>
   </div>
 </template>
 
 <style>
-  .actions {
-    display: flex;
-    justify-content: space-between;
-  }
+.actions {
+  display: flex;
+  justify-content: space-between;
+}
 
-  .loader {
-    display: flex;
-    justify-content: center;
-    padding: 4rem;
-    width: 100%;
-  }
+.loader {
+  display: flex;
+  justify-content: center;
+  padding: 4rem;
+  width: 100%;
+}
 </style>

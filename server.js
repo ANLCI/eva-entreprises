@@ -1,4 +1,6 @@
-import express from 'express'; // Use import for ESM
+/* eslint-disable no-undef */
+
+import express from 'express';
 const app = express();
 
 const directory = '/' + (process.env.STATIC_DIR || 'dist');

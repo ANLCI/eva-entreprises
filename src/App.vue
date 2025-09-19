@@ -3,19 +3,14 @@ import { RouterView } from 'vue-router'
 
 const logoText = ['ANLCI']
 const serviceTitle = 'EVA - Entreprises'
-const serviceDescription = "Outil d’évaluation pour la gestion des situations d’illettrisme en milieu professionnel"
+const serviceDescription =
+  'Outil d’évaluation pour la gestion des situations d’illettrisme en milieu professionnel'
 const placeholder = ''
 const homeTo = '/'
 </script>
 
 <template>
-  <DsfrHeader
-    :logo-text
-    :service-title
-    :service-description
-    :placeholder
-    :home-to
-  />
+  <DsfrHeader :logo-text :service-title :service-description :placeholder :home-to />
   <RouterView />
 </template>
 
