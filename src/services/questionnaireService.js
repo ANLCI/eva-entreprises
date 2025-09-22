@@ -1,6 +1,13 @@
 export async function fetchQuestionnaire(id) {
   const apiUrl = import.meta.env.VITE_API_BASE_URL
-  const response = await fetch(`${apiUrl}/questionnaires/${id}.json`)
+  const url = `${apiUrl}/questionnaires/${id}`
+
+  const response = await fetch(
+    url,
+    {
+      headers: { 'Content-Type': 'application/json' }
+    }
+  )
   if (!response.ok) {
     throw new Error('Failed to fetch questionnaire')
   }
