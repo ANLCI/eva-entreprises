@@ -38,7 +38,7 @@ const mockApiResponse = [
 ];
 
 test('visits the app root url and stubs API call', async ({ page }) => {
-  await page.route('https://prepro.eva.anlci.gouv.fr/api/questionnaires/**', (route) => {
+  await page.route('**/questionnaires/**', (route) => {
     route.fulfill({
       contentType: 'application/json',
       body: JSON.stringify(mockApiResponse),
