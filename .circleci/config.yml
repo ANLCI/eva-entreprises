@@ -55,7 +55,7 @@ jobs:
       - checkout
       - restore_node_modules_cache
       - run: npm install -D @playwright/test && npx playwright install --with-deps
-      - run: npx playwright test
+      - run: (npm run dev&); sleep 1; npx playwright test
       - store_artifacts:
           path: ./playwright-report
           destination: playwright-report-first
