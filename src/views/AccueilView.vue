@@ -1,20 +1,22 @@
 <script setup>
-import { useMutation } from '@tanstack/vue-query'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { creeEvaluation, getEvaluationParams } from './../services/evaluationService'
+import { commenceNouvelleEvaluation } from './../services/evaluationService'
 
 const router = useRouter()
+const isLoading = ref(false)
 
-const mutation = useMutation({
-  mutationFn: () => creeEvaluation(getEvaluationParams()),
-  onSuccess: () => {
-    router.push('/form')
+const commencer = async () => {
+  isLoading.value = true;
+
+  try {
+    await commenceNouvelleEvaluation();
+    router.push('/form');
+  } catch (error) {
+    console.error("Erreur de création d'évaluation :", error);
+  } finally {
+    isLoading.value = false;
   }
-})
-
-const commencer = () => {
-  // Déclenche l'appel API lorsque le bouton est cliqué
-  mutation.mutate()
 }
 </script>
 
@@ -24,7 +26,7 @@ const commencer = () => {
       label="Commencer"
       @click="commencer"
       primary
-      :disabled="mutation.isLoading"
+      :disabled="isLoading"
     />
   </div>
 </template>
