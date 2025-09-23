@@ -20,10 +20,11 @@
     "@gouvfr/dsfr": "^1.14.1",
     "@gouvminint/vue-dsfr": "^8.8.0",
     "@tanstack/vue-query": "^5.89.0",
+    "express": "4.x",
     "pinia": "^3.0.3",
+    "uuid": "^13.0.0",
     "vue": "^3.5.18",
-    "vue-router": "^4.5.1",
-    "express": "4.x"
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.31.0",

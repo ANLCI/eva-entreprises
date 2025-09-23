@@ -1,11 +1,27 @@
 <script setup>
-import { ref, computed } from 'vue'
-import { useQuery } from '@tanstack/vue-query'
+import { ref, computed, watch } from 'vue'
+import { useQuery, useMutation } from '@tanstack/vue-query'
 import { useRouter } from 'vue-router'
 import EvaSpinner from './../components/EvaSpinner.vue'
+import { useEvaluationStore } from './../stores/evaluationStore'
 import { fetchQuestionnaire } from './../services/questionnaireService'
+import { creeEvenement, getEvenementParams } from './../services/evenementService'
 
 const router = useRouter()
+const evaluationStore = useEvaluationStore()
+
+watch(() => evaluationStore.evaluationId, (newVal) => {
+  if (newVal === null) {
+    router.push('/');
+  }
+}, { immediate: true });
+
+const mutation = useMutation({
+  mutationFn: (eventParams) => creeEvenement(eventParams),
+  onError: (error) => {
+    console.error('Erreur lors de la création de l\'évènement:', error)
+  }
+})
 
 const idQuestionnaireEvaEntreprises = import.meta.env.VITE_ID_QUESTIONNAIRE_EVA_ENTREPRISES
 const { data, error, isFetching } = useQuery({
@@ -31,10 +47,21 @@ const selectedAnswer = computed({
 
 const nextQuestion = () => {
   if (currentQuestionIndex.value < data.value.length - 1) {
+    enregistreEvenement()
+
     currentQuestionIndex.value++
   } else {
     router.push('/resultat')
   }
+}
+
+const enregistreEvenement = () => {
+  const evenementParams = getEvenementParams(
+    currentQuestion.value.nom_technique,
+    selectedAnswer.value,
+    currentQuestion.value.intitule
+  )
+  mutation.mutate(evenementParams)
 }
 
 const prevQuestion = () => {
@@ -56,7 +83,7 @@ const options = computed(() => {
 })
 
 const labelBoutonSuivant = computed(() => {
-  if (currentQuestionIndex.value === data.length - 1) {
+  if (currentQuestionIndex.value === data.value.length - 1) {
     return 'Valider'
   } else {
     return 'Continuer'

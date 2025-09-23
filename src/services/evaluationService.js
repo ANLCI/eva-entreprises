@@ -1,3 +1,5 @@
+import { useEvaluationStore } from './../stores/evaluationStore'
+import { useEvenementStore } from './../stores/evenementStore'
 import { conditionsPassationHelper } from './helpers/conditionsPassationHelper'
 
 /**
@@ -30,4 +32,28 @@ export function getEvaluationParams() {
     beneficiaire_id: import.meta.env.VITE_ID_BENEFICIAIRE_EVA_ENTREPRISES,
     conditions_passation_attributes: conditionsPassationHelper()
   };
+}
+
+/**
+ * Service pour initialiser une nouvelle évaluation.
+ */
+export async function commenceNouvelleEvaluation() {
+  const evaluationStore = useEvaluationStore();
+  const evenementStore = useEvenementStore();
+  const params = getEvaluationParams();
+
+  try {
+    const data = await creeEvaluation(params);
+    // Récupérer l'ID de l'évaluation de la réponse API
+    const evaluationId = data.id;
+
+    // Stocker l'ID dans le store Pinia
+    evaluationStore.setEvaluationId(evaluationId);
+    evenementStore.resetPosition();
+
+    return evaluationId;
+  } catch (error) {
+    console.error(`Erreur lors de la création de l'évaluation: ${error.message}`);
+    throw error; // Renvoyer l'erreur pour qu'elle soit traitée dans la vue
+  }
 }
