@@ -38,14 +38,30 @@ const mockApiResponse = [
 ];
 
 test('visits the app root url and stubs API call', async ({ page }) => {
-  await page.route('**/questionnaires/**', (route) => {
+  await page.route('*/**/api/evaluations', (route) => {
+    route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({ id: 1 }),
+    });
+  });
+
+  await page.route('*/**/api/questionnaires/**', (route) => {
     route.fulfill({
       contentType: 'application/json',
       body: JSON.stringify(mockApiResponse),
     });
   });
 
+  await page.route('*/**/api/evenements', (route) => {
+    route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({}),
+    });
+  });
+
   await page.goto('/');
+
+  await page.click('button:has-text("Commencer")');
 
   await expect(page.locator('legend')).toHaveText('Quelle est la taille de votre entreprise/structure ?');
 
