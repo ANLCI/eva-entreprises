@@ -6,21 +6,26 @@ import EvaSpinner from './../components/EvaSpinner.vue'
 import { useEvaluationStore } from './../stores/evaluationStore'
 import { fetchQuestionnaire } from './../services/questionnaireService'
 import { creeEvenement, getEvenementParams } from './../services/evenementService'
+import QuestionInput from './../components/QuestionInput.vue'
 
 const router = useRouter()
 const evaluationStore = useEvaluationStore()
 
-watch(() => evaluationStore.evaluationId, (newVal) => {
-  if (newVal === null) {
-    router.push('/');
-  }
-}, { immediate: true });
+watch(
+  () => evaluationStore.evaluationId,
+  (newVal) => {
+    if (newVal === null) {
+      router.push('/')
+    }
+  },
+  { immediate: true },
+)
 
 const mutation = useMutation({
   mutationFn: (eventParams) => creeEvenement(eventParams),
   onError: (error) => {
-    console.error('Erreur lors de la création de l\'évènement:', error)
-  }
+    console.error("Erreur lors de la création de l'évènement:", error)
+  },
 })
 
 const idQuestionnaireEvaEntreprises = import.meta.env.VITE_ID_QUESTIONNAIRE_EVA_ENTREPRISES
@@ -49,7 +54,6 @@ const nextQuestion = () => {
   enregistreEvenement()
 
   if (currentQuestionIndex.value < data.value.length - 1) {
-
     currentQuestionIndex.value++
   } else {
     router.push('/resultat')
@@ -60,7 +64,7 @@ const enregistreEvenement = () => {
   const evenementParams = getEvenementParams(
     currentQuestion.value.nom_technique,
     selectedAnswer.value,
-    currentQuestion.value.intitule
+    currentQuestion.value.intitule,
   )
   mutation.mutate(evenementParams)
 }
@@ -70,18 +74,6 @@ const prevQuestion = () => {
     currentQuestionIndex.value--
   }
 }
-
-const options = computed(() => {
-  if (currentQuestion.value && currentQuestion.value.choix) {
-    return currentQuestion.value.choix.map((choix) => ({
-      label: choix.intitule,
-      id: choix.nom_technique,
-      value: choix.nom_technique,
-      hint: null,
-    }))
-  }
-  return []
-})
 
 const labelBoutonSuivant = computed(() => {
   if (currentQuestionIndex.value === data.value.length - 1) {
@@ -108,11 +100,13 @@ const labelBoutonSuivant = computed(() => {
       <div>Question {{ currentQuestionIndex + 1 }}/{{ data.length }}</div>
       <br />
       <div v-if="currentQuestion">
-        <DsfrRadioButtonSet
+        <QuestionInput
+          :currentQuestion="currentQuestion"
           v-model="selectedAnswer"
-          :legend="currentQuestion.intitule"
-          :options="options"
-          name="currentQuestion.nom_technique"
+          :currentQuestionIndex="currentQuestionIndex"
+          :labelBoutonSuivant="labelBoutonSuivant"
+          @prevQuestion="prevQuestion"
+          @nextQuestion="nextQuestion"
         />
         <div class="actions">
           <div>

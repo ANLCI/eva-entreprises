@@ -7,6 +7,6 @@ export const useEvaluationStore = defineStore('evaluation', {
   actions: {
     setEvaluationId(id) {
       this.evaluationId = id
-    }
-  }
+    },
+  },
 })

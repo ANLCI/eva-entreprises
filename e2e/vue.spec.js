@@ -35,6 +35,28 @@ const mockApiResponse = [
       },
     ]
   },
+  {
+    "id": "6746bda0-5e5c-4eda-a201-af6b68a47efd",
+    "nom_technique": "Q1PG04",
+    "suffix_reponse": "",
+    "description": "",
+    "metacompetence": null,
+    "demarrage_audio_modalite_reponse": false,
+    "illustration": null,
+    "aide": "",
+    "score": null,
+    "type": "saisie",
+    "sous_type": "redaction",
+    "placeholder": "",
+    "texte_a_trous": "",
+    "max_length": null,
+    "consigne_audio": null,
+    "audio_url": null,
+    "intitule_audio": null,
+    "intitule": "A quelle branche votre structure est-elle rattachée ?",
+    "modalite_reponse": null,
+    "reponses": []
+  }
 ];
 
 test('visits the app root url and stubs API call', async ({ page }) => {
@@ -68,4 +90,18 @@ test('visits the app root url and stubs API call', async ({ page }) => {
   const choicesList = page.locator('label');
   await expect(choicesList.first()).toContainText('250 salariés et +');
   await expect(choicesList.nth(1)).toContainText('50 à 249 salariés');
+
+  // Select the first choice
+  await choicesList.first().click();
+
+  await page.click('button:has-text("Continuer")');
+
+  await expect(page.locator('label')).toHaveText('A quelle branche votre structure est-elle rattachée ?');
+
+  const inputField = page.locator('input[type="text"]');
+  await inputField.fill('Finance');
+
+  await page.click('button:has-text("Valider")');
+  // await page.pause()
+  await expect(page.locator('h1')).toHaveText('Résultat');
 });

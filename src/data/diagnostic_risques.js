@@ -44,10 +44,7 @@ export const Q1PG03 = {
 
 export const Q1PG04 = {
   nom_technique: "Q1PG04",
-  question: "A quelle branche votre structure est-elle rattachée ?",
-  reponses: [
-    { nom_technique: "Q1PG04R1", intitule: "Non défini", score: 0 },
-  ],
+  question: "A quelle branche votre structure est-elle rattachée ?"
 };
 
 export const Q1PG05 = {
