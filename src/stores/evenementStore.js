@@ -8,7 +8,7 @@ export const useEvenementStore = defineStore('evenement', {
   }),
   actions: {
     incrementePosition() {
-      this.position += 1;
+      this.position += 1
     },
     getCurrentPosition() {
       const currentPosition = this.position
@@ -16,7 +16,7 @@ export const useEvenementStore = defineStore('evenement', {
       return currentPosition
     },
     resetPosition() {
-      this.position = 0;
-    }
-  }
+      this.position = 0
+    },
+  },
 })

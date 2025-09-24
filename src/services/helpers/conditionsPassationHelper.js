@@ -19,6 +19,6 @@ export function conditionsPassationHelper() {
   return {
     user_agent: window.navigator.userAgent,
     hauteur_fenetre_navigation: window.innerHeight,
-    largeur_fenetre_navigation: window.innerWidth
-  };
+    largeur_fenetre_navigation: window.innerWidth,
+  }
 }
