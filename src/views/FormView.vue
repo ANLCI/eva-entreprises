@@ -46,8 +46,9 @@ const selectedAnswer = computed({
 })
 
 const nextQuestion = () => {
+  enregistreEvenement()
+
   if (currentQuestionIndex.value < data.value.length - 1) {
-    enregistreEvenement()
 
     currentQuestionIndex.value++
   } else {
