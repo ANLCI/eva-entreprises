@@ -52,8 +52,6 @@ const answers = ref({})
 const isLoading = ref(false)
 
 const currentQuestion = computed(() => {
-  console.log('data.value', data.value)
-  console.log('currentQuestionIndex.value', currentQuestionIndex.value)
   return data && data.value ? data.value[currentQuestionIndex.value] : null
 })
 
