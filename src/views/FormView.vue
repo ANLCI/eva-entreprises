@@ -1,13 +1,19 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useQuery, useMutation } from '@tanstack/vue-query'
 import { useRouter } from 'vue-router'
 import EvaSpinner from './../components/EvaSpinner.vue'
 import { useEvaluationStore } from './../stores/evaluationStore'
 import { fetchQuestionnaire } from './../services/questionnaireService'
-import { creeEvenement, getEvenemenResponseParams, getEvenemenFinSituationParams } from './../services/evenementService'
+import {
+  creeEvenement,
+  getEvenementDemarrageParams,
+  getEvenementResponseParams,
+  getEvenementFinSituationParams,
+  getEvenementAffichageQuestionParams,
+} from './../services/evenementService'
 import QuestionInput from './../components/QuestionInput.vue'
-import { useAlertStore } from '../stores/alertStore';
+import { useAlertStore } from '../stores/alertStore'
 
 const router = useRouter()
 const evaluationStore = useEvaluationStore()
@@ -17,7 +23,6 @@ watch(
   () => evaluationStore.evaluationId,
   (newVal) => {
     if (newVal === null) {
-      console.log("redirect")
       router.push('/')
     }
   },
@@ -31,8 +36,8 @@ const mutation = useMutation({
     alertStore.showAlert({
       title: "Erreur lors de la création de l'évènement",
       description: err.message,
-      type: 'error'
-    });
+      type: 'error',
+    })
   },
 })
 
@@ -47,7 +52,9 @@ const answers = ref({})
 const isLoading = ref(false)
 
 const currentQuestion = computed(() => {
-  return data ? data.value[currentQuestionIndex.value] : null
+  console.log('data.value', data.value)
+  console.log('currentQuestionIndex.value', currentQuestionIndex.value)
+  return data && data.value ? data.value[currentQuestionIndex.value] : null
 })
 
 const selectedAnswer = computed({
@@ -76,8 +83,18 @@ const nextQuestion = async () => {
   }
 }
 
+const enregistreEvenementDemarrage = async () => {
+  const evenementParams = getEvenementDemarrageParams()
+  return mutation.mutateAsync(evenementParams)
+}
+
+const enregistreEvenementAffichageQuestion = async (question) => {
+  const evenementParams = getEvenementAffichageQuestionParams(question)
+  return mutation.mutateAsync(evenementParams)
+}
+
 const enregistreEvenementReponse = async () => {
-  const evenementParams = getEvenemenResponseParams(
+  const evenementParams = getEvenementResponseParams(
     currentQuestion.value.nom_technique,
     selectedAnswer.value,
     currentQuestion.value.intitule,
@@ -86,7 +103,7 @@ const enregistreEvenementReponse = async () => {
 }
 
 const enregistreEvenementFinSituation = async () => {
-  const evenementParams = getEvenemenFinSituationParams()
+  const evenementParams = getEvenementFinSituationParams()
   return mutation.mutateAsync(evenementParams)
 }
 
@@ -101,6 +118,18 @@ const labelBoutonSuivant = computed(() => {
     return 'Valider'
   } else {
     return 'Continuer'
+  }
+})
+
+watch(currentQuestion, (newQuestion) => {
+  if (newQuestion) {
+    enregistreEvenementAffichageQuestion(newQuestion)
+  }
+})
+
+onMounted(() => {
+  if (currentQuestionIndex.value === 0) {
+    enregistreEvenementDemarrage()
   }
 })
 </script>
@@ -136,7 +165,7 @@ const labelBoutonSuivant = computed(() => {
               :label="labelBoutonSuivant"
               @click="nextQuestion"
               primary
-              :disabled="(selectedAnswer === null) || isLoading"
+              :disabled="selectedAnswer === null || isLoading"
             />
           </div>
         </div>

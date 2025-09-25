@@ -1,8 +1,8 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import { useAlertStore } from './stores/alertStore';
+import { useAlertStore } from './stores/alertStore'
 
-const alertStore = useAlertStore();
+const alertStore = useAlertStore()
 
 const logoText = ['ANLCI']
 const serviceTitle = 'EVA - Entreprises'
