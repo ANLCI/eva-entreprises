@@ -3,9 +3,11 @@ import { useEvenementStore } from './../stores/evenementStore'
 import { scoreDeReponsePourQuestion, scoreMaxPourQuestion } from './questionService'
 
 const EVALUATION_NAMES = {
+  DEMARRAGE: 'demarrage',
   FIN_SITUATION: 'finSituation',
+  AFFICHAGE_QUESTION_QCM: 'affichageQuestionQCM',
   REPONSE: 'reponse',
-};
+}
 
 /**
  * Service pour faire appel à l'API et créer un évènement
@@ -30,7 +32,7 @@ export async function creeEvenement(evenementParams) {
   return response.json()
 }
 
-function getEvenemenParamsBase() {
+function getEvenementParamsBase(nom) {
   const evaluationStore = useEvaluationStore()
   const evaluationId = evaluationStore.evaluationId
 
@@ -40,6 +42,7 @@ function getEvenemenParamsBase() {
   const nomTechniqueSituation = import.meta.env.VITE_NOM_TECHNIQUE_SITUATION_EVA_ENTREPRISES
 
   return {
+    nom: nom,
     date: Date.now(),
     session_id: session_id,
     position: position,
@@ -48,34 +51,43 @@ function getEvenemenParamsBase() {
   }
 }
 
-export function getEvenemenFinSituationParams() {
-  const baseParams = getEvenemenParamsBase()
-
-  return {
-    ...baseParams,
-    ...{
-      nom: EVALUATION_NAMES.FIN_SITUATION
-    }
-  };
+export function getEvenementDemarrageParams() {
+  return getEvenementParamsBase(EVALUATION_NAMES.DEMARRAGE)
 }
 
-export function getEvenemenResponseParams(question, reponse, intitule) {
-  const baseParams = getEvenemenParamsBase()
+export function getEvenementFinSituationParams() {
+  return getEvenementParamsBase(EVALUATION_NAMES.FIN_SITUATION)
+}
 
-  const score = scoreDeReponsePourQuestion(question, reponse)
-  const scoreMax = scoreMaxPourQuestion(question)
+export function getEvenementAffichageQuestionParams(question) {
+  const baseParams = getEvenementParamsBase(EVALUATION_NAMES.AFFICHAGE_QUESTION_QCM)
 
   return {
     ...baseParams,
     ...{
-      nom: EVALUATION_NAMES.REPONSE,
       donnees: {
-        question: question,
+        question: question.nom_technique,
+      },
+    },
+  }
+}
+
+export function getEvenementResponseParams(questionNomTechnique, reponse, intitule) {
+  const baseParams = getEvenementParamsBase(EVALUATION_NAMES.REPONSE)
+
+  const score = scoreDeReponsePourQuestion(questionNomTechnique, reponse)
+  const scoreMax = scoreMaxPourQuestion(questionNomTechnique)
+
+  return {
+    ...baseParams,
+    ...{
+      donnees: {
+        question: questionNomTechnique,
         reponse: reponse,
         intitule: intitule,
         score: score,
         scoreMax: scoreMax,
-      }
-    }
-  };
+      },
+    },
+  }
 }
