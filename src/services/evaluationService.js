@@ -50,6 +50,7 @@ export async function commenceNouvelleEvaluation() {
     // Stocker l'ID dans le store Pinia
     evaluationStore.setEvaluationId(evaluationId)
     evenementStore.resetPosition()
+    evenementStore.resetSessionId()
 
     return evaluationId
   } catch (error) {

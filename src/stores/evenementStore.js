@@ -18,5 +18,8 @@ export const useEvenementStore = defineStore('evenement', {
     resetPosition() {
       this.position = 0
     },
+    resetSessionId() {
+      this.session_id = uuidv4()
+    }
   },
 })

@@ -2,6 +2,11 @@ import { useEvaluationStore } from './../stores/evaluationStore'
 import { useEvenementStore } from './../stores/evenementStore'
 import { scoreDeReponsePourQuestion, scoreMaxPourQuestion } from './questionService'
 
+const EVALUATION_NAMES = {
+  FIN_SITUATION: 'finSituation',
+  REPONSE: 'reponse',
+};
+
 /**
  * Service pour faire appel à l'API et créer un évènement
  *
@@ -25,7 +30,7 @@ export async function creeEvenement(evenementParams) {
   return response.json()
 }
 
-export function getEvenementParams(question, reponse, intitule) {
+function getEvenemenParamsBase() {
   const evaluationStore = useEvaluationStore()
   const evaluationId = evaluationStore.evaluationId
 
@@ -33,22 +38,44 @@ export function getEvenementParams(question, reponse, intitule) {
   const session_id = evenementStore.session_id
   const position = evenementStore.getCurrentPosition()
   const nomTechniqueSituation = import.meta.env.VITE_NOM_TECHNIQUE_SITUATION_EVA_ENTREPRISES
-  const score = scoreDeReponsePourQuestion(question, reponse)
-  const scoreMax = scoreMaxPourQuestion(question)
 
   return {
     date: Date.now(),
-    nom: 'reponse',
     session_id: session_id,
     position: position,
     situation: nomTechniqueSituation,
     evaluation_id: evaluationId,
-    donnees: {
-      question: question,
-      reponse: reponse,
-      intitule: intitule,
-      score: score,
-      scoreMax: scoreMax,
-    },
   }
+}
+
+export function getEvenemenFinSituationParams() {
+  const baseParams = getEvenemenParamsBase()
+
+  return {
+    ...baseParams,
+    ...{
+      nom: EVALUATION_NAMES.FIN_SITUATION
+    }
+  };
+}
+
+export function getEvenemenResponseParams(question, reponse, intitule) {
+  const baseParams = getEvenemenParamsBase()
+
+  const score = scoreDeReponsePourQuestion(question, reponse)
+  const scoreMax = scoreMaxPourQuestion(question)
+
+  return {
+    ...baseParams,
+    ...{
+      nom: EVALUATION_NAMES.REPONSE,
+      donnees: {
+        question: question,
+        reponse: reponse,
+        intitule: intitule,
+        score: score,
+        scoreMax: scoreMax,
+      }
+    }
+  };
 }

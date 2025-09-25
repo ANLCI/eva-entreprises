@@ -5,16 +5,19 @@ import { useRouter } from 'vue-router'
 import EvaSpinner from './../components/EvaSpinner.vue'
 import { useEvaluationStore } from './../stores/evaluationStore'
 import { fetchQuestionnaire } from './../services/questionnaireService'
-import { creeEvenement, getEvenementParams } from './../services/evenementService'
+import { creeEvenement, getEvenemenResponseParams, getEvenemenFinSituationParams } from './../services/evenementService'
 import QuestionInput from './../components/QuestionInput.vue'
+import { useAlertStore } from '../stores/alertStore';
 
 const router = useRouter()
 const evaluationStore = useEvaluationStore()
+const alertStore = useAlertStore()
 
 watch(
   () => evaluationStore.evaluationId,
   (newVal) => {
     if (newVal === null) {
+      console.log("redirect")
       router.push('/')
     }
   },
@@ -23,19 +26,25 @@ watch(
 
 const mutation = useMutation({
   mutationFn: (eventParams) => creeEvenement(eventParams),
-  onError: (error) => {
-    console.error("Erreur lors de la création de l'évènement:", error)
+  onError: (err) => {
+    console.error("Erreur lors de la création de l'évènement :", err)
+    alertStore.showAlert({
+      title: "Erreur lors de la création de l'évènement",
+      description: err.message,
+      type: 'error'
+    });
   },
 })
 
 const idQuestionnaireEvaEntreprises = import.meta.env.VITE_ID_QUESTIONNAIRE_EVA_ENTREPRISES
-const { data, error, isFetching } = useQuery({
+const { data, isFetching } = useQuery({
   queryKey: ['repoData'],
   queryFn: () => fetchQuestionnaire(idQuestionnaireEvaEntreprises),
 })
 
 const currentQuestionIndex = ref(0)
 const answers = ref({})
+const isLoading = ref(false)
 
 const currentQuestion = computed(() => {
   return data ? data.value[currentQuestionIndex.value] : null
@@ -50,23 +59,35 @@ const selectedAnswer = computed({
   },
 })
 
-const nextQuestion = () => {
-  enregistreEvenement()
+const nextQuestion = async () => {
+  isLoading.value = true
 
-  if (currentQuestionIndex.value < data.value.length - 1) {
-    currentQuestionIndex.value++
-  } else {
-    router.push('/resultat')
+  try {
+    await enregistreEvenementReponse()
+
+    if (currentQuestionIndex.value < data.value.length - 1) {
+      currentQuestionIndex.value++
+    } else {
+      await enregistreEvenementFinSituation()
+      router.push('/resultat')
+    }
+  } finally {
+    isLoading.value = false
   }
 }
 
-const enregistreEvenement = () => {
-  const evenementParams = getEvenementParams(
+const enregistreEvenementReponse = async () => {
+  const evenementParams = getEvenemenResponseParams(
     currentQuestion.value.nom_technique,
     selectedAnswer.value,
     currentQuestion.value.intitule,
   )
-  mutation.mutate(evenementParams)
+  return mutation.mutateAsync(evenementParams)
+}
+
+const enregistreEvenementFinSituation = async () => {
+  const evenementParams = getEvenemenFinSituationParams()
+  return mutation.mutateAsync(evenementParams)
 }
 
 const prevQuestion = () => {
@@ -88,13 +109,6 @@ const labelBoutonSuivant = computed(() => {
   <div class="fr-container">
     <div v-if="isFetching" class="loader">
       <EvaSpinner />
-    </div>
-    <div v-else-if="error">
-      <DsfrAlert
-        type="error"
-        title="Une erreur est survenue lors de la récupération des questions"
-        :description="error.message"
-      />
     </div>
     <div v-else-if="data">
       <div>Question {{ currentQuestionIndex + 1 }}/{{ data.length }}</div>
@@ -122,7 +136,7 @@ const labelBoutonSuivant = computed(() => {
               :label="labelBoutonSuivant"
               @click="nextQuestion"
               primary
-              :disabled="selectedAnswer === null"
+              :disabled="(selectedAnswer === null) || isLoading"
             />
           </div>
         </div>
