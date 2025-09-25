@@ -1,5 +1,8 @@
 <script setup>
 import { RouterView } from 'vue-router'
+import { useAlertStore } from './stores/alertStore';
+
+const alertStore = useAlertStore();
 
 const logoText = ['ANLCI']
 const serviceTitle = 'EVA - Entreprises'
@@ -11,6 +14,16 @@ const homeTo = '/'
 
 <template>
   <DsfrHeader :logo-text :service-title :service-description :placeholder :home-to />
+
+  <div class="fr-container">
+    <DsfrAlert
+      v-if="alertStore.isVisible"
+      :type="alertStore.type"
+      :title="alertStore.title"
+      :description="alertStore.description"
+    />
+  </div>
+
   <RouterView />
 </template>
 
