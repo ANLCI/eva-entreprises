@@ -7,6 +7,7 @@ import VueDsfr from '@gouvminint/vue-dsfr' // Import (par défaut) de la bibliot
 import { VueQueryPlugin } from '@tanstack/vue-query'
 
 import { createPinia } from 'pinia'
+import RollbarPlugin from './services/rollbar';
 
 import App from './App.vue'
 import router from './router'
@@ -17,5 +18,6 @@ app.use(createPinia())
 app.use(router)
 app.use(VueDsfr)
 app.use(VueQueryPlugin)
+app.use(RollbarPlugin);
 
 app.mount('#app')

@@ -20,4 +20,7 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  define: {
+    'import.meta.env.SOURCE_VERSION': JSON.stringify(process.env.SOURCE_VERSION || 'version inconnue'),
+  },
 })
