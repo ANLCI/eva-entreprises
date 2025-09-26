@@ -10,6 +10,7 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
+import RollbarPlugin from './rollbar'
 
 const app = createApp(App)
 
@@ -17,5 +18,6 @@ app.use(createPinia())
 app.use(router)
 app.use(VueDsfr)
 app.use(VueQueryPlugin)
+app.use(RollbarPlugin)
 
 app.mount('#app')
