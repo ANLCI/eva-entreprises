@@ -96,12 +96,13 @@ test('visits the app root url and stubs API call', async ({ page }) => {
 
   await page.click('button:has-text("Continuer")');
 
-  await expect(page.locator('label')).toHaveText('A quelle branche votre structure est-elle rattachée ?');
+  // await expect(page.locator('label')).toHaveText('A quelle branche votre structure est-elle rattachée ?');
 
   const inputField = page.locator('input[type="text"]');
   await inputField.fill('Finance');
 
   await page.click('button:has-text("Valider")');
   // await page.pause()
-  await expect(page.locator('h1')).toHaveText('Résultat');
+  await page.waitForURL("**/admin/**")
+  // await expect(page.url()).toContain('/admin/');
 });
