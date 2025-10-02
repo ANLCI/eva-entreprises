@@ -91,18 +91,13 @@ test('visits the app root url and stubs API call', async ({ page }) => {
   await expect(choicesList.first()).toContainText('250 salariés et +');
   await expect(choicesList.nth(1)).toContainText('50 à 249 salariés');
 
-  // Select the first choice
   await choicesList.first().click();
 
   await page.click('button:has-text("Continuer")');
-
-  // await expect(page.locator('label')).toHaveText('A quelle branche votre structure est-elle rattachée ?');
 
   const inputField = page.locator('input[type="text"]');
   await inputField.fill('Finance');
 
   await page.click('button:has-text("Valider")');
-  // await page.pause()
   await page.waitForURL("**/admin/**")
-  // await expect(page.url()).toContain('/admin/');
 });
