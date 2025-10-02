@@ -17,6 +17,8 @@ import { useAlertStore } from '../stores/alertStore'
 
 const router = useRouter()
 const evaluationStore = useEvaluationStore()
+const evaluationId = evaluationStore.evaluationId
+const evaluationUrl = `${import.meta.env.VITE_API_BASE_URL}/evaluations/${evaluationId}`
 const alertStore = useAlertStore()
 
 watch(
@@ -74,7 +76,7 @@ const nextQuestion = async () => {
       currentQuestionIndex.value++
     } else {
       await enregistreEvenementFinSituation()
-      router.push('/resultat')
+      window.location.href = evaluationUrl
     }
   } finally {
     isLoading.value = false
