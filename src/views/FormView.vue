@@ -18,7 +18,7 @@ import { useAlertStore } from '../stores/alertStore'
 const router = useRouter()
 const evaluationStore = useEvaluationStore()
 const evaluationId = evaluationStore.evaluationId
-const evaluationUrl = `${import.meta.env.VITE_API_BASE_URL}/evaluations/${evaluationId}`
+const evaluationUrl = `${import.meta.env.VITE_ADMIN_BASE_URL}/evaluations/${evaluationId}`
 const alertStore = useAlertStore()
 
 watch(
