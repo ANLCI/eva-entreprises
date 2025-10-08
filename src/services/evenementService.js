@@ -32,14 +32,14 @@ export async function creeEvenement(evenementParams) {
   return response.json()
 }
 
-function getEvenementParamsBase(nom) {
+function getEvenementParamsBase(nom, situation) {
   const evaluationStore = useEvaluationStore()
   const evaluationId = evaluationStore.evaluationId
 
   const evenementStore = useEvenementStore()
   const session_id = evenementStore.session_id
   const position = evenementStore.getCurrentPosition()
-  const nomTechniqueSituation = import.meta.env.VITE_NOM_TECHNIQUE_SITUATION_EVA_ENTREPRISES
+  const nomTechniqueSituation = situation
 
   return {
     nom: nom,
@@ -51,16 +51,16 @@ function getEvenementParamsBase(nom) {
   }
 }
 
-export function getEvenementDemarrageParams() {
-  return getEvenementParamsBase(EVALUATION_NAMES.DEMARRAGE)
+export function getEvenementDemarrageParams(situation) {
+  return getEvenementParamsBase(EVALUATION_NAMES.DEMARRAGE, situation)
 }
 
-export function getEvenementFinSituationParams() {
-  return getEvenementParamsBase(EVALUATION_NAMES.FIN_SITUATION)
+export function getEvenementFinSituationParams(situation) {
+  return getEvenementParamsBase(EVALUATION_NAMES.FIN_SITUATION, situation)
 }
 
-export function getEvenementAffichageQuestionParams(question) {
-  const baseParams = getEvenementParamsBase(EVALUATION_NAMES.AFFICHAGE_QUESTION_QCM)
+export function getEvenementAffichageQuestionParams(question, situation) {
+  const baseParams = getEvenementParamsBase(EVALUATION_NAMES.AFFICHAGE_QUESTION_QCM, situation)
 
   return {
     ...baseParams,
@@ -72,11 +72,11 @@ export function getEvenementAffichageQuestionParams(question) {
   }
 }
 
-export function getEvenementResponseParams(questionNomTechnique, reponse, intitule) {
-  const baseParams = getEvenementParamsBase(EVALUATION_NAMES.REPONSE)
+export function getEvenementResponseParams(situation, questionNomTechnique, reponse, intitule) {
+  const baseParams = getEvenementParamsBase(EVALUATION_NAMES.REPONSE, situation)
 
-  const score = scoreDeReponsePourQuestion(questionNomTechnique, reponse)
-  const scoreMax = scoreMaxPourQuestion(questionNomTechnique)
+  const score = scoreDeReponsePourQuestion(situation, questionNomTechnique, reponse)
+  const scoreMax = scoreMaxPourQuestion(situation, questionNomTechnique)
 
   return {
     ...baseParams,

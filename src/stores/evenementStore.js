@@ -20,6 +20,10 @@ export const useEvenementStore = defineStore('evenement', {
     },
     resetSessionId() {
       this.session_id = uuidv4()
+      return this.session_id
     },
+    setSessionId(sessionId) {
+      this.session_id = sessionId
+    }
   },
 })
