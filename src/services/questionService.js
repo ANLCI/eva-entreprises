@@ -1,13 +1,19 @@
 import * as diagnosticRisques from './../data/diagnostic_risques'
+import * as evaluationImpact from './../data/evaluation_impact'
 
-function reponsesPourQuestion(question) {
-  const questionDetails = diagnosticRisques[question]
+const questions = {
+  "diag_risques_entreprise": diagnosticRisques,
+  "evaluation_impact_general": evaluationImpact
+}
+
+function reponsesPourQuestion(situation, question) {
+  const questionDetails = questions[situation][question]
 
   return questionDetails.reponses
 }
 
-export function scoreDeReponsePourQuestion(question, reponse) {
-  const reponses = reponsesPourQuestion(question)
+export function scoreDeReponsePourQuestion(situation, question, reponse) {
+  const reponses = reponsesPourQuestion(situation, question)
   if (!reponses) return 0
 
   const reponseDetails = reponses.find((r) => r.nom_technique === reponse)
@@ -16,8 +22,8 @@ export function scoreDeReponsePourQuestion(question, reponse) {
   return score
 }
 
-export function scoreMaxPourQuestion(question) {
-  const reponses = reponsesPourQuestion(question)
+export function scoreMaxPourQuestion(situation, question) {
+  const reponses = reponsesPourQuestion(situation, question)
   if (!reponses) return 0
 
   const scoreMax = Math.max(...reponses.map((r) => r.score))

@@ -59,7 +59,7 @@ const mockApiResponse = [
   }
 ];
 
-test('visits the app root url and stubs API call', async ({ page }) => {
+test('Complète le premier questionnaire', async ({ page }) => {
   await page.route('*/**/api/evaluations', (route) => {
     route.fulfill({
       contentType: 'application/json',
@@ -99,5 +99,49 @@ test('visits the app root url and stubs API call', async ({ page }) => {
   await inputField.fill('Finance');
 
   await page.click('button:has-text("Valider")');
+  await page.waitForURL("**/admin/**")
+});
+
+test('reprend le deuxième questionnaire', async ({ page }) => {
+  await page.route('*/**/api/evaluations', (route) => {
+    route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({ id: 1 }),
+    });
+  });
+
+  await page.route('*/**/api/questionnaires/**', (route) => {
+    route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify(mockApiResponse),
+    });
+  });
+
+  await page.route('*/**/api/evenements', (route) => {
+    route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({}),
+    });
+  });
+
+  const evaluationId = "123456"
+  await page.goto(`/evaluation-impact?evaluation_id=${evaluationId}`);
+
+  await expect(page.locator('legend')).toHaveText('Quelle est la taille de votre entreprise/structure ?');
+
+  const choicesList = page.locator('label');
+  await expect(choicesList.first()).toContainText('250 salariés et +');
+  await expect(choicesList.nth(1)).toContainText('50 à 249 salariés');
+
+  // Select the first choice
+  await choicesList.first().click();
+
+  await page.click('button:has-text("Continuer")');
+
+  const inputField = page.locator('input[type="text"]');
+  await inputField.fill('Finance');
+
+  await page.click('button:has-text("Valider")');
+
   await page.waitForURL("**/admin/**")
 });
