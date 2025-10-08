@@ -15,7 +15,7 @@ const commencer = async () => {
 
   try {
     await commenceNouvelleEvaluation()
-    router.push('/form')
+    router.push('/diagnostic-risques')
   } catch (err) {
     console.error("Erreur de création d'évaluation :", err)
     alertStore.showAlert({
