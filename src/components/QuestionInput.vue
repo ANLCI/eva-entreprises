@@ -6,6 +6,7 @@
       :legend="currentQuestion.intitule"
       :options="computedOptions"
       :name="currentQuestion.nom_technique"
+      :rich="true"
     />
     <div v-else class="fr-pb-4v">
       <DsfrInputGroup
@@ -48,7 +49,7 @@ const computedOptions = computed(() => {
       label: choix.intitule,
       id: choix.nom_technique,
       value: choix.nom_technique,
-      hint: null,
+      hint: null
     }))
   }
   return []
