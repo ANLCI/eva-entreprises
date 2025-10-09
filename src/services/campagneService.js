@@ -13,10 +13,10 @@ export async function fetchCampagne(codeCampagne) {
   return response.json()
 }
 
-export async function  recupereCampagne(codeCampagne) {
+export async function recupereCampagne(codeCampagne) {
   const campagneStore = useCampagneStore()
 
-  let campagne = campagneStore.getCampagne();
+  let campagne = campagneStore.getCampagne()
   if (campagne) return campagne
 
   campagne = await fetchCampagne(codeCampagne)

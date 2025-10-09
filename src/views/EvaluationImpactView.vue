@@ -28,5 +28,6 @@ onMounted(async () => {
   <QuestionnaireForm
     v-if="dataEstPrete"
     :questionnaire-id="idQuestionnaireEvaEntreprises"
-    :situation="situation" />
+    :situation="situation"
+  />
 </template>

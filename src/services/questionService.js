@@ -2,8 +2,8 @@ import * as diagnosticRisques from './../data/diagnostic_risques'
 import * as evaluationImpact from './../data/evaluation_impact'
 
 const questions = {
-  "diag_risques_entreprise": diagnosticRisques,
-  "evaluation_impact_general": evaluationImpact
+  diag_risques_entreprise: diagnosticRisques,
+  evaluation_impact_general: evaluationImpact,
 }
 
 function reponsesPourQuestion(situation, question) {

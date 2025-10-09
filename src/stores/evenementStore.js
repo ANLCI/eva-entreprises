@@ -24,6 +24,6 @@ export const useEvenementStore = defineStore('evenement', {
     },
     setSessionId(sessionId) {
       this.session_id = sessionId
-    }
+    },
   },
 })

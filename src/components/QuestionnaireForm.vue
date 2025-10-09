@@ -78,8 +78,8 @@ const selectedAnswer = computed({
  */
 const redirigeVersEvaluation = () => {
   setTimeout(() => {
-    window.location.href = evaluationUrl;
-  }, 500);
+    window.location.href = evaluationUrl
+  }, 500)
 }
 
 const nextQuestion = async () => {
@@ -152,13 +152,14 @@ onMounted(() => {
 </script>
 
 <template>
-<div class="fr-container">
+  <div class="fr-container">
     <div v-if="isFetching" class="loader">
       <EvaSpinner />
     </div>
     <div v-else-if="data">
       <div>Question {{ currentQuestionIndex + 1 }}/{{ data.length }}</div>
       <br />
+
       <div v-if="currentQuestion">
         <QuestionInput
           :currentQuestion="currentQuestion"
@@ -187,23 +188,23 @@ onMounted(() => {
           </div>
         </div>
       </div>
-    </div>
-    <div v-else>
-      <DsfrAlert type="warning" title="Pas de question disponible" />
+      <div v-else>
+        <DsfrAlert type="warning" title="Pas de question disponible" />
+      </div>
     </div>
   </div>
 </template>
 
 <style>
-  .actions {
-    display: flex;
-    justify-content: space-between;
-  }
+.actions {
+  display: flex;
+  justify-content: space-between;
+}
 
-  .loader {
-    display: flex;
-    justify-content: center;
-    padding: 4rem;
-    width: 100%;
-  }
+.loader {
+  display: flex;
+  justify-content: center;
+  padding: 4rem;
+  width: 100%;
+}
 </style>

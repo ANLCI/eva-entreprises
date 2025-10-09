@@ -4,7 +4,6 @@ import { scoreDeReponsePourQuestion, scoreMaxPourQuestion } from './questionServ
 const situation = 'diag_risques_entreprise'
 
 describe('#scoreDeReponsePourQuestion', () => {
-
   it('doit retourner le score correct pour une réponse valide', () => {
     const score = scoreDeReponsePourQuestion(situation, 'Q1PG01', 'Q1PG01R2')
     expect(score).toBe(0)

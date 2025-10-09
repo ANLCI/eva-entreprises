@@ -24,6 +24,6 @@ export const useCampagneStore = defineStore('campagne', {
         code: this.code,
         situations: this.situations,
       }
-    }
+    },
   },
 })
