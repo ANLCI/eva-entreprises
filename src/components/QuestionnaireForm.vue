@@ -73,6 +73,15 @@ const selectedAnswer = computed({
   },
 })
 
+/**
+ * Attend 500 millisecondes avant de rediriger pour que le serveur puisse calculer les résultats avant de l'afficher à l'utilisateur
+ */
+const redirigeVersEvaluation = () => {
+  setTimeout(() => {
+    window.location.href = evaluationUrl;
+  }, 500);
+}
+
 const nextQuestion = async () => {
   isLoading.value = true
 
@@ -83,7 +92,7 @@ const nextQuestion = async () => {
       currentQuestionIndex.value++
     } else {
       await enregistreEvenementFinSituation()
-      window.location.href = evaluationUrl
+      redirigeVersEvaluation()
     }
   } finally {
     isLoading.value = false
