@@ -2,8 +2,8 @@ import './assets/main.css'
 
 import { createApp } from 'vue'
 import '@gouvfr/dsfr/dist/dsfr.min.css'
-import '@gouvminint/vue-dsfr/styles'
-import VueDsfr from '@gouvminint/vue-dsfr'
+import '@captive_owner/vue-dsfr/styles'
+import VueDsfr from '@captive_owner/vue-dsfr'
 import { VueQueryPlugin } from '@tanstack/vue-query'
 
 import { createPinia } from 'pinia'
