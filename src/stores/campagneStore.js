@@ -5,6 +5,7 @@ export const useCampagneStore = defineStore('campagne', {
     libelle: null,
     code: null,
     situations: null,
+    codeSituationCourante: null,
   }),
   actions: {
     setLibelle(libelle) {
@@ -24,6 +25,18 @@ export const useCampagneStore = defineStore('campagne', {
         code: this.code,
         situations: this.situations,
       }
+    },
+    getSituationCourante(codeSituation) {
+      if (this.situations == null) return
+
+      const situation = this.situations.find((s) => s.code === codeSituation)
+
+      return situation ? situation : this.situations[0]
+    },
+    getSituation(situationId) {
+      if (this.situations == null) return
+
+      return this.situations.find((s) => s.id === situationId)
     },
   },
 })

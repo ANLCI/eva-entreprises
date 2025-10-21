@@ -8,9 +8,7 @@
       :name="currentQuestion.nom_technique"
       :rich="true"
     />
-    <div
-      v-else-if="typeInput === 'select'"
-      class="fr-pb-4v">
+    <div v-else-if="typeInput === 'select'" class="fr-pb-4v">
       <DsfrSelect
         v-model="internalValue"
         :label="currentQuestion.intitule"
@@ -44,7 +42,11 @@ const internalValue = ref(props.modelValue)
 const typeInput = ref(definiTypeInput())
 
 function definiTypeInput() {
-  if (props.currentQuestion && props.currentQuestion.choix && props.currentQuestion.choix.length <= 5) {
+  if (
+    props.currentQuestion &&
+    props.currentQuestion.choix &&
+    props.currentQuestion.choix.length <= 5
+  ) {
     return 'radio'
   } else if (props.currentQuestion && props.currentQuestion.choix) {
     return 'select'
@@ -69,7 +71,7 @@ watch(
   () => {
     typeInput.value = definiTypeInput()
   },
-  { deep: true }
+  { deep: true },
 )
 
 const computedOptions = computed(() => {
@@ -78,13 +80,13 @@ const computedOptions = computed(() => {
       label: choix.intitule,
       id: choix.nom_technique,
       value: choix.nom_technique,
-      hint: null
+      hint: null,
     }))
   }
   if (typeInput.value === 'select') {
     return props.currentQuestion.choix.map((choix) => ({
       text: choix.intitule,
-      value: choix.nom_technique
+      value: choix.nom_technique,
     }))
   }
   return []
