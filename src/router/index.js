@@ -19,6 +19,11 @@ const router = createRouter({
       name: 'Evaluation Impact',
       component: () => import('../views/EvaluationImpactView.vue'),
     },
+    {
+      path: '/situations/:id',
+      name: 'Situation',
+      component: () => import('../views/SituationView.vue'),
+    },
   ],
 })
 

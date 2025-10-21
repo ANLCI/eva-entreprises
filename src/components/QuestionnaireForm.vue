@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, watch, onMounted, defineProps } from 'vue'
-import { useQuery, useMutation } from '@tanstack/vue-query'
+import { useMutation } from '@tanstack/vue-query'
 import { useRouter } from 'vue-router'
 
 import {
@@ -10,26 +10,22 @@ import {
   getEvenementFinSituationParams,
   getEvenementAffichageQuestionParams,
 } from './../services/evenementService'
-import { fetchQuestionnaire } from './../services/questionnaireService'
 
 import { useEvaluationStore } from './../stores/evaluationStore'
 import { useAlertStore } from '../stores/alertStore'
 
 import QuestionInput from './QuestionInput.vue'
-import EvaSpinner from './EvaSpinner.vue'
 
-const props = defineProps(['questionnaireId', 'situation'])
+const props = defineProps(['situation'])
 
 const router = useRouter()
 const evaluationStore = useEvaluationStore()
 const evaluationId = evaluationStore.evaluationId
 
 const situation = props.situation
+const nomTechniqueSituation = situation.nom_technique
 
-const { data, isFetching } = useQuery({
-  queryKey: ['repoData'],
-  queryFn: () => fetchQuestionnaire(props.questionnaireId),
-})
+const questions = situation.questions
 
 watch(
   () => evaluationStore.evaluationId,
@@ -61,7 +57,7 @@ const answers = ref({})
 const isLoading = ref(false)
 
 const currentQuestion = computed(() => {
-  return data && data.value ? data.value[currentQuestionIndex.value] : null
+  return questions ? questions[currentQuestionIndex.value] : null
 })
 
 const selectedAnswer = computed({
@@ -88,7 +84,7 @@ const nextQuestion = async () => {
   try {
     await enregistreEvenementReponse()
 
-    if (currentQuestionIndex.value < data.value.length - 1) {
+    if (currentQuestionIndex.value < questions.length - 1) {
       currentQuestionIndex.value++
     } else {
       await enregistreEvenementFinSituation()
@@ -100,18 +96,18 @@ const nextQuestion = async () => {
 }
 
 const enregistreEvenementDemarrage = async () => {
-  const evenementParams = getEvenementDemarrageParams(situation)
+  const evenementParams = getEvenementDemarrageParams(nomTechniqueSituation)
   return mutation.mutateAsync(evenementParams)
 }
 
 const enregistreEvenementAffichageQuestion = async (question) => {
-  const evenementParams = getEvenementAffichageQuestionParams(question, situation)
+  const evenementParams = getEvenementAffichageQuestionParams(question, nomTechniqueSituation)
   return mutation.mutateAsync(evenementParams)
 }
 
 const enregistreEvenementReponse = async () => {
   const evenementParams = getEvenementResponseParams(
-    situation,
+    nomTechniqueSituation,
     currentQuestion.value.nom_technique,
     selectedAnswer.value,
     currentQuestion.value.intitule,
@@ -120,7 +116,7 @@ const enregistreEvenementReponse = async () => {
 }
 
 const enregistreEvenementFinSituation = async () => {
-  const evenementParams = getEvenementFinSituationParams(situation)
+  const evenementParams = getEvenementFinSituationParams(nomTechniqueSituation)
   return mutation.mutateAsync(evenementParams)
 }
 
@@ -131,7 +127,7 @@ const prevQuestion = () => {
 }
 
 const labelBoutonSuivant = computed(() => {
-  if (currentQuestionIndex.value === data.value.length - 1) {
+  if (currentQuestionIndex.value === questions.length - 1) {
     return 'Valider'
   } else {
     return 'Continuer'
@@ -153,11 +149,8 @@ onMounted(() => {
 
 <template>
   <div class="fr-container">
-    <div v-if="isFetching" class="loader">
-      <EvaSpinner />
-    </div>
-    <div v-else-if="data">
-      <div>Question {{ currentQuestionIndex + 1 }}/{{ data.length }}</div>
+    <div v-if="questions">
+      <div>Question {{ currentQuestionIndex + 1 }}/{{ questions.length }}</div>
       <br />
 
       <div v-if="currentQuestion">

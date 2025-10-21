@@ -26,3 +26,8 @@ export async function recupereCampagne(codeCampagne) {
   campagneStore.setSituations(campagne.situations)
   return campagne
 }
+
+export async function recupereSituation() {
+  const campagneStore = useCampagneStore()
+  return campagneStore.getSituationCourante()
+}

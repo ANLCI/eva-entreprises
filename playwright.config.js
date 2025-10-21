@@ -1,5 +1,12 @@
 import process from 'node:process'
 import { defineConfig, devices } from '@playwright/test'
+import dotenv from 'dotenv';
+import path from 'path';
+
+// Read from ".env" file.
+const __dirname = path.dirname(new URL(import.meta.url).pathname); // Correction ici
+dotenv.config({ path: path.resolve(__dirname, '.env') });
+
 
 /**
  * Read environment variables from file.

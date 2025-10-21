@@ -1,6 +1,8 @@
 import { useEvaluationStore } from './../stores/evaluationStore'
 import { useEvenementStore } from './../stores/evenementStore'
+import { useCampagneStore } from './../stores/campagneStore'
 import { conditionsPassationHelper } from './helpers/conditionsPassationHelper'
+import { recupereCampagne } from './campagneService'
 
 /**
  * Service pour faire appel à l'API et créer une évaluation.
@@ -25,11 +27,11 @@ export async function creeEvaluation(evaluationParams) {
   return response.json()
 }
 
-export function getEvaluationParams() {
+export function getEvaluationParams(code_campagne, beneficiaire_id) {
   return {
-    code_campagne: import.meta.env.VITE_CODE_CAMPAGNE_EVA_ENTREPRISES,
+    code_campagne: code_campagne,
     debutee_le: new Date().toISOString(),
-    beneficiaire_id: import.meta.env.VITE_ID_BENEFICIAIRE_EVA_ENTREPRISES,
+    beneficiaire_id: beneficiaire_id,
     conditions_passation_attributes: conditionsPassationHelper(),
   }
 }
@@ -37,10 +39,10 @@ export function getEvaluationParams() {
 /**
  * Service pour initialiser une nouvelle évaluation.
  */
-export async function commenceNouvelleEvaluation() {
+export async function commenceNouvelleEvaluation(code_campagne, beneficiaire_id) {
   const evaluationStore = useEvaluationStore()
   const evenementStore = useEvenementStore()
-  const params = getEvaluationParams()
+  const params = getEvaluationParams(code_campagne, beneficiaire_id)
 
   try {
     const data = await creeEvaluation(params)
@@ -52,9 +54,18 @@ export async function commenceNouvelleEvaluation() {
     evenementStore.resetPosition()
     evenementStore.resetSessionId()
 
+    await recupereCampagne(code_campagne)
+
     return evaluationId
   } catch (error) {
     console.error(`Erreur lors de la création de l'évaluation: ${error.message}`)
-    throw error // Renvoyer l'erreur pour qu'elle soit traitée dans la vue
+    throw error
   }
+}
+
+export async function recupereSituationCourante() {
+  const campagneStore = useCampagneStore()
+  const evaluationStore = useEvaluationStore()
+
+  return campagneStore.getSituationCourante(evaluationStore.codeSituationCourante)
 }
