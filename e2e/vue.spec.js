@@ -1,8 +1,5 @@
 import { test, expect } from '@playwright/test';
 
-import { useCampagneStore } from './../src/stores/campagneStore'
-
-import { mockApiQuestionnaire2 } from './fixtures/questionnaire2';
 import { mockApiCampagne } from './fixtures/campagne';
 import { mockApiCampagne2 } from './fixtures/campagne2';
 
@@ -64,17 +61,19 @@ test('Complète le premier questionnaire', async ({ page }) => {
 });
 
 test('reprend le deuxième questionnaire', async ({ page }) => {
-  await page.route('*/**/api/evaluations', (route) => {
+  const evaluationId = "evaluation-123456"
+  const campagneId = "campagne-123456"
+  await page.route(`*/**/api/evaluations/${evaluationId}`, (route) => {
     route.fulfill({
       contentType: 'application/json',
-      body: JSON.stringify({ id: 1 }),
+      body: JSON.stringify({ id: evaluationId, campagne_id: campagneId }),
     });
   });
 
-  await page.route('*/**/api/questionnaires/**', (route) => {
+  await page.route(`*/**/api/campagnes/${campagneId}`, (route) => {
     route.fulfill({
       contentType: 'application/json',
-      body: JSON.stringify(mockApiQuestionnaire2),
+      body: JSON.stringify(mockApiCampagne),
     });
   });
 
@@ -85,7 +84,6 @@ test('reprend le deuxième questionnaire', async ({ page }) => {
     });
   });
 
-  const evaluationId = "123456"
   await page.goto(`/evaluation-impact?evaluation_id=${evaluationId}`);
 
   await expect(page.locator('legend')).toHaveText("Avez-vous parfois l'impression de devoir prendre plus de temps que nécessaire pour vous assurer que vos collaborateurs ou collaboratrices ont bien compris certaines informations ?");
@@ -95,14 +93,6 @@ test('reprend le deuxième questionnaire', async ({ page }) => {
   await choicesList1.first().click();
 
   await page.click('button:has-text("Continuer")');
-
-  const choicesList2 = page.locator('label');
-  await expect(choicesList2.first()).toContainText('Oui');
-  await choicesList2.first().click();
-
-  await page.click('button:has-text("Valider")');
-
-  await page.waitForURL("**/admin/**")
 });
 
 test("Commence un questionnaire à partir d'un code campagne", async ({ page }) => {

@@ -1,33 +1,35 @@
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import QuestionnaireForm from './../components/QuestionnaireForm.vue'
+import { onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+
+import EvaSpinner from './../components/EvaSpinner.vue'
 
 import { useEvaluationStore } from './../stores/evaluationStore'
+import { recupereEvaluation } from './../services/evaluationService'
+import { recupereCampagne } from './../services/campagneService'
 
-const idQuestionnaireEvaEntreprises = import.meta.env.VITE_ID_QUESTIONNAIRE_EVALUATION_IMPACT
-const situation = import.meta.env.VITE_NOM_TECHNIQUE_SITUATION_EVALUATION_IMPACT
 const route = useRoute()
+const router = useRouter()
 
-const dataEstPrete = ref(false)
-
-const assigneEvaluationIdDepuisParametre = () => {
+const assigneEvaluationIdDepuisParametre = async () => {
   const evaluationStore = useEvaluationStore()
   const evaluationId = route.query.evaluation_id
   evaluationStore.setEvaluationId(evaluationId)
+
+  const evaluation = await recupereEvaluation(evaluationId)
+  const campagne = await recupereCampagne(evaluation.campagne_id)
+
+  const situation = campagne.situations.find((situation) =>
+    situation.nom_technique.includes('impact'),
+  )
+  router.push(`/situations/${situation.id}`)
 }
 
 onMounted(async () => {
   assigneEvaluationIdDepuisParametre()
-
-  dataEstPrete.value = true
 })
 </script>
 
 <template>
-  <QuestionnaireForm
-    v-if="dataEstPrete"
-    :questionnaire-id="idQuestionnaireEvaEntreprises"
-    :situation="situation"
-  />
+  <EvaSpinner></EvaSpinner>
 </template>
