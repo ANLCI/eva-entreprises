@@ -21,7 +21,23 @@ export async function creeEvaluation(evaluationParams) {
   })
 
   if (!response.ok) {
-    throw new Error(`Erreur lors de la création de l'évaluation: ${response.statusText}`)
+    throw new Error(`Erreur lors de la création de l'évaluation : ${response.statusText}`)
+  }
+
+  return response.json()
+}
+
+export async function recupereEvaluationApi(evaluationId) {
+  const apiUrl = import.meta.env.VITE_API_BASE_URL
+  const url = `${apiUrl}/evaluations/${evaluationId}`
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  })
+
+  if (!response.ok) {
+    throw new Error(`Erreur lors de la récupération de l'évaluation : ${response.statusText}`)
   }
 
   return response.json()
@@ -68,4 +84,10 @@ export async function recupereSituationCourante() {
   const evaluationStore = useEvaluationStore()
 
   return campagneStore.getSituationCourante(evaluationStore.codeSituationCourante)
+}
+
+export async function recupereEvaluation(evaluationId) {
+  const data = await recupereEvaluationApi(evaluationId)
+
+  return data
 }

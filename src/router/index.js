@@ -10,11 +10,6 @@ const router = createRouter({
       component: AccueilView,
     },
     {
-      path: '/diagnostic-risques',
-      name: 'Diagnostic Risques',
-      component: () => import('../views/DiagnosticRisquesView.vue'),
-    },
-    {
       path: '/evaluation-impact',
       name: 'Evaluation Impact',
       component: () => import('../views/EvaluationImpactView.vue'),
