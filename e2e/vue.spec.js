@@ -91,8 +91,6 @@ test('reprend le deuxième questionnaire', async ({ page }) => {
   const choicesList1 = page.locator('label');
   await expect(choicesList1.first()).toContainText('Oui');
   await choicesList1.first().click();
-
-  await page.click('button:has-text("Continuer")');
 });
 
 test("Commence un questionnaire à partir d'un code campagne", async ({ page }) => {
