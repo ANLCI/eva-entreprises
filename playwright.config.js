@@ -12,7 +12,8 @@ const envPath = path.resolve(__dirname, '.env');
 if (fs.existsSync(envPath)) {
   dotenv.config({ path: envPath }); // Charger le fichier .env
 } else {
-  console.warn('.env file not found. Loading without environment variables.'); // Avertir si le fichier n'existe pas
+  const envTestPath = path.resolve(__dirname, '.env.test');
+  dotenv.config({ path: envTestPath }); // Charger le fichier .env.test
 }
 
 /**
