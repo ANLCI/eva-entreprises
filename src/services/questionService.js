@@ -6,10 +6,16 @@ const questions = {
   evaluation_impact_general: evaluationImpact,
 }
 
-function reponsesPourQuestion(situation, question) {
-  const questionDetails = questions[situation][question]
+export function reponsesPourQuestion(situation, question) {
+  const baseSituation = situation.split('__')[0];
 
-  return questionDetails.reponses
+  const questionsPourSituation = questions[baseSituation];
+  if (!questionsPourSituation) return undefined;
+
+  const questionDetails = questionsPourSituation[question];
+  if (!questionDetails) return undefined;
+
+  return questionDetails.reponses;
 }
 
 export function scoreDeReponsePourQuestion(situation, question, reponse) {
