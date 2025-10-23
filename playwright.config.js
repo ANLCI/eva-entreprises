@@ -2,11 +2,18 @@ import process from 'node:process'
 import { defineConfig, devices } from '@playwright/test'
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 
-// Read from ".env" file.
-const __dirname = path.dirname(new URL(import.meta.url).pathname); // Correction ici
-dotenv.config({ path: path.resolve(__dirname, '.env') });
+// Déterminer le chemin du répertoire actuel
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
+// Vérifiez si le fichier .env existe
+const envPath = path.resolve(__dirname, '.env');
+if (fs.existsSync(envPath)) {
+  dotenv.config({ path: envPath }); // Charger le fichier .env
+} else {
+  console.warn('.env file not found. Loading without environment variables.'); // Avertir si le fichier n'existe pas
+}
 
 /**
  * Read environment variables from file.
