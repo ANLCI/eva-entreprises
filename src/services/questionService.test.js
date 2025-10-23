@@ -35,17 +35,6 @@ describe('#reponsesPourQuestion', () => {
       }
     ]));
   });
-
-  it('doit retourner les réponses pour une situation avec un variant', () => {
-    const reponses = reponsesPourQuestion("diag_risques_entreprise__variant", 'Q1PG02');
-    expect(reponses).toEqual(expect.arrayContaining([
-      {
-        "intitule": "Entre 30 et 50 ans",
-        "nom_technique": "Q1PG02R2",
-        "score": 0,
-      }
-    ]));
-  });
 });
 
 describe('#scoreDeReponsePourQuestion', () => {

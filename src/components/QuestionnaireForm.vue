@@ -107,7 +107,7 @@ const enregistreEvenementAffichageQuestion = async (question) => {
 
 const enregistreEvenementReponse = async () => {
   const evenementParams = getEvenementResponseParams(
-    nomTechniqueSituation,
+    situation,
     currentQuestion.value.nom_technique,
     selectedAnswer.value,
     currentQuestion.value.intitule,
