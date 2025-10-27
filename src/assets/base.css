@@ -34,6 +34,8 @@
   --color-text: var(--vt-c-text-light-1);
 
   --section-gap: 160px;
+
+  --progress-bar-height: 0.5rem;
 }
 
 @media (prefers-color-scheme: dark) {
