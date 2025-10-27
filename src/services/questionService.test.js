@@ -1,41 +1,49 @@
 import { describe, it, expect } from 'vitest'
-import { reponsesPourQuestion, scoreDeReponsePourQuestion, scoreMaxPourQuestion } from './questionService'
+import {
+  reponsesPourQuestion,
+  scoreDeReponsePourQuestion,
+  scoreMaxPourQuestion,
+} from './questionService'
 
 const situation = 'diag_risques_entreprise'
 
 describe('#reponsesPourQuestion', () => {
   it('doit retourner les réponses pour une question valide', () => {
-    const reponses = reponsesPourQuestion(situation, 'Q1PG01');
-    expect(reponses).toEqual(expect.arrayContaining([
-      {
-       "intitule": "11 à 49 salariés/agents",
-        "nom_technique": "Q1PG01R3",
-        "score": 0,
-      }
-    ]));
-  });
+    const reponses = reponsesPourQuestion(situation, 'Q1PG01')
+    expect(reponses).toEqual(
+      expect.arrayContaining([
+        {
+          intitule: '11 à 49 salariés/agents',
+          nom_technique: 'Q1PG01R3',
+          score: 0,
+        },
+      ]),
+    )
+  })
 
   it('doit retourner undefined pour une question invalide', () => {
-    const reponses = reponsesPourQuestion(situation, 'QuestionInvalide');
-    expect(reponses).toBeUndefined();
-  });
+    const reponses = reponsesPourQuestion(situation, 'QuestionInvalide')
+    expect(reponses).toBeUndefined()
+  })
 
   it('doit retourner undefined pour une situation invalide', () => {
-    const reponses = reponsesPourQuestion('situationInvalide', 'Q1PG01');
-    expect(reponses).toBeUndefined();
-  });
+    const reponses = reponsesPourQuestion('situationInvalide', 'Q1PG01')
+    expect(reponses).toBeUndefined()
+  })
 
   it('doit retourner les réponses pour une question existante dans la situation', () => {
-    const reponses = reponsesPourQuestion(situation, 'Q1PG02');
-    expect(reponses).toEqual(expect.arrayContaining([
-      {
-        "intitule": "Entre 30 et 50 ans",
-        "nom_technique": "Q1PG02R2",
-        "score": 0,
-      }
-    ]));
-  });
-});
+    const reponses = reponsesPourQuestion(situation, 'Q1PG02')
+    expect(reponses).toEqual(
+      expect.arrayContaining([
+        {
+          intitule: 'Entre 30 et 50 ans',
+          nom_technique: 'Q1PG02R2',
+          score: 0,
+        },
+      ]),
+    )
+  })
+})
 
 describe('#scoreDeReponsePourQuestion', () => {
   it('doit retourner le score correct pour une réponse valide', () => {

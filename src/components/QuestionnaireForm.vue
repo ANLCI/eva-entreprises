@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onMounted, defineProps } from 'vue'
+import { ref, computed, watch, onMounted, defineProps, defineEmits } from 'vue'
 import { useMutation } from '@tanstack/vue-query'
 import { useRouter } from 'vue-router'
 
@@ -38,6 +38,8 @@ watch(
   },
   { immediate: true },
 )
+
+const emit = defineEmits(['updateCurrentQuestion'])
 
 const evaluationUrl = `${import.meta.env.VITE_ADMIN_BASE_URL}/evaluations/${evaluationId}`
 const alertStore = useAlertStore()
@@ -138,6 +140,7 @@ const labelBoutonSuivant = computed(() => {
 
 watch(currentQuestion, (newQuestion) => {
   if (newQuestion) {
+    emit('updateCurrentQuestion', newQuestion)
     enregistreEvenementAffichageQuestion(newQuestion)
   }
 })
@@ -150,7 +153,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="fr-container">
+  <div class="questionnaire-form">
     <div v-if="questions" class="questionnaire-container">
       <ProgressBar :current-value="currentQuestionIndex + 1" :max-value="questions.length" />
 
@@ -188,6 +191,10 @@ onMounted(() => {
 </template>
 
 <style>
+.questionnaire-form {
+  width: 100%;
+}
+
 .questionnaire-container {
   display: flex;
   flex-direction: column;
@@ -199,6 +206,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  padding: 0 3rem;
 }
 
 .questionnaire .fr-fieldset {
@@ -211,5 +219,16 @@ onMounted(() => {
 
 .questionnaire__bouton-precedent {
   margin-left: -1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .questionnaire-container {
+    gap: 1.5rem;
+  }
+
+  .questionnaire {
+    padding: 0 1rem;
+    gap: 1.5rem;
+  }
 }
 </style>

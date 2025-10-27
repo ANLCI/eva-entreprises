@@ -1,7 +1,12 @@
+import { thematiques } from '../thematiques'
+
+const thematiqueSituation = thematiques.evaluation_impact_general
+
 export const Q2PC01 = {
   nom_technique: 'Q2PC01',
   question:
     "Avez-vous parfois l'impression (de vous sur-engager ou) de devoir prendre plus de temps que nécessaire pour vous assurer que vos collaborateurs ou collaboratrices ont bien compris certaines informations ?",
+  thematique: thematiqueSituation[0],
   reponses: [
     {
       nom_technique: 'Q2PC01R1',
@@ -24,6 +29,7 @@ export const Q2PC02 = {
   nom_technique: 'Q2PC02',
   question:
     'Avez-vous des collègues, chefs, managers, qui estiment devoir prendre en charge une partie du travail de leurs collaborateurs ou collaboratrices (glissement de fonctions) pour pallier les difficultés avec les compétences de base (lire, écrire, compter, cliquer) ?',
+  thematique: thematiqueSituation[0],
   reponses: [
     {
       nom_technique: 'Q2PC02R1',
@@ -46,6 +52,7 @@ export const Q2PC03 = {
   nom_technique: 'Q2PC03',
   question:
     'Certains de vos salariés/agents font-ils appel à des personnes ressources afin de répondre à leurs besoins personnels ou professionnels (demande de congés, prise de rendez-vous, lecture de documents … par une tierce personne ( médecin du travail, infirmier, assistant(e), un collègue de service, un membre de la famille, …)) ?',
+  thematique: thematiqueSituation[0],
   reponses: [
     {
       nom_technique: 'Q2PC03R1',
@@ -68,6 +75,7 @@ export const Q2AO01 = {
   nom_technique: 'Q2AO01',
   question:
     "Avez-vous déjà été surpris par la réaction (stress, refus, agressivité) de certains salariés/agents suite à l’annonce d’un changement (de service, de chef, de poste, de lieu de travail, d'outil de travail, …) ?",
+  thematique: thematiqueSituation[1],
   reponses: [
     {
       nom_technique: 'Q2AO01R1',
@@ -90,6 +98,7 @@ export const Q2AO02 = {
   nom_technique: 'Q2AO02',
   question:
     'Avez-vous des personnes dans vos effectifs qui peinent à modifier leurs habitudes de travail et à utiliser les outils numériques (tablettes, logiciels, scannettes, applications, …) ?',
+  thematique: thematiqueSituation[1],
   reponses: [
     {
       nom_technique: 'Q2AO02R1',
@@ -112,6 +121,7 @@ export const Q2AO03 = {
   nom_technique: 'Q2AO03',
   question:
     'Avez-vous déjà dû aménager un poste de travail pour l’adapter à un salarié/agent en difficulté avec les compétences de base (exemple : manque de compétences numériques) ?',
+  thematique: thematiqueSituation[1],
   reponses: [
     {
       nom_technique: 'Q2AO03R1',
@@ -134,6 +144,7 @@ export const Q2AO04 = {
   nom_technique: 'Q2AO04',
   question:
     'Avez-vous l’impression que votre structure s’auto-censure sur des développements potentiels du fait d’un manque de compétences de certains collaborateurs ou de certaines collaboratrices ?',
+  thematique: thematiqueSituation[1],
   reponses: [
     {
       nom_technique: 'Q2AO04R1',
@@ -156,6 +167,7 @@ export const Q2SQ01 = {
   nom_technique: 'Q2SQ01',
   question:
     "Avez-vous le sentiment d'avoir dans vos effectifs des salariés/agents qui n'utilisent pas les documents de travail ou ne respectent pas certaines consignes ?",
+  thematique: thematiqueSituation[2],
   reponses: [
     {
       nom_technique: 'Q2SQ01R1',
@@ -178,6 +190,7 @@ export const Q2SQ02 = {
   nom_technique: 'Q2SQ02',
   question:
     'Avez-vous, dans vos effectifs, des salariés/agents qui adaptent la documentation professionnelle en créant leurs propres supports visuels : pictogrammes, dessins, symboles, etc. ?',
+  thematique: thematiqueSituation[2],
   reponses: [
     {
       nom_technique: 'Q2SQ02R1',
@@ -200,6 +213,7 @@ export const Q2SQ03 = {
   nom_technique: 'Q2SQ03',
   question:
     'Avez-vous déjà été amené à adapter ou simplifier vos process pour les rendre accessibles aux salariés ou agents en difficulté avec les compétences de base ?',
+  thematique: thematiqueSituation[2],
   reponses: [
     {
       nom_technique: 'Q2SQ03R1',
@@ -222,6 +236,7 @@ export const Q2SQ04 = {
   nom_technique: 'Q2SQ04',
   question:
     'Avez-vous des personnes dans vos effectifs qui ne réalisent jamais le reporting d’activité qui leur est demandé ?',
+  thematique: thematiqueSituation[2],
   reponses: [
     {
       nom_technique: 'Q2SQ04R1',
@@ -244,6 +259,7 @@ export const Q2SQ05 = {
   nom_technique: 'Q2SQ05',
   question:
     'Vous arrive-t-il d’avoir des clients insatisfaits à cause d’un produit/service défaillant à la suite d’une mauvaise application d’écrits (consignes, procédures, règles, …) ?',
+  thematique: thematiqueSituation[2],
   reponses: [
     {
       nom_technique: 'Q2SQ05R1',
@@ -266,6 +282,7 @@ export const Q2SQ06 = {
   nom_technique: 'Q2SQ06',
   question:
     'Estimez-vous que votre entreprise prenne des risques dans la gestion et le traitement de ses données numériques du fait d’un manque de compétences de certains de vos salariés/agents ?',
+  thematique: thematiqueSituation[2],
   reponses: [
     {
       nom_technique: 'Q2SQ06R1',
@@ -288,6 +305,7 @@ export const Q2SQ07 = {
   nom_technique: 'Q2SQ07',
   question:
     'Diriez-vous que votre organisation prend des risques sur des consignes de qualité ou de sécurité à cause d’un manque de compétences de certains de vos salariés/agents ?',
+  thematique: thematiqueSituation[2],
   reponses: [
     {
       nom_technique: 'Q2SQ07R1',
@@ -310,6 +328,7 @@ export const Q2MP01 = {
   nom_technique: 'Q2MP01',
   question:
     'Avez-vous, parmi vos salariés/agents, des personnes qui ne souhaitent pas évoluer ou changer de poste ?',
+  thematique: thematiqueSituation[3],
   reponses: [
     {
       nom_technique: 'Q2MP01R1',
@@ -332,6 +351,7 @@ export const Q2MP02 = {
   nom_technique: 'Q2MP02',
   question:
     'Avez-vous l’impression que vos salariés/agents sont toujours en surcharge de travail, qu’il manque des effectifs et qu’il y a trop d’heures supplémentaires non justifiées par un surcroît d’activité ?',
+  thematique: thematiqueSituation[3],
   reponses: [
     {
       nom_technique: 'Q2MP02R1',
@@ -354,6 +374,7 @@ export const Q2MP03 = {
   nom_technique: 'Q2MP03',
   question:
     'Vous arrive-t-il de faire appel à du personnel intérimaire pour pallier un manque de compétences de vos équipes ?',
+  thematique: thematiqueSituation[3],
   reponses: [
     {
       nom_technique: 'Q2MP03R1',
@@ -376,6 +397,7 @@ export const Q2MP04 = {
   nom_technique: 'Q2MP04',
   question:
     "Le changement de métiers/modes d'intervention engendrés par la robotisation ou la digitalisation ont-elles occasionné des difficultés pour certains membres de vos effectifs (à changer de métier ou à profiter de mobilités internes) ?",
+  thematique: thematiqueSituation[3],
   reponses: [
     {
       nom_technique: 'Q2MP04R1',
@@ -398,6 +420,7 @@ export const Q2MP05 = {
   nom_technique: 'Q2MP05',
   question:
     'Vous arrive-t-il d’avoir un salarié/agent souffrant de douleurs de dos récurrentes qui, malgré une formation sur les gestes et postures, n’a pas modifié ses pratiques ?',
+  thematique: thematiqueSituation[3],
   reponses: [
     {
       nom_technique: 'Q2MP05R1',
@@ -420,6 +443,7 @@ export const Q2MP06 = {
   nom_technique: 'Q2MP06',
   question:
     'Avez-vous repéré des absences possiblement dues à un manque de maîtrise des compétences de base y compris numériques (absence en formation, lors d’un audit, lors d’une visite de personnalités externes, …) ?',
+  thematique: thematiqueSituation[3],
   reponses: [
     {
       nom_technique: 'Q2MP06R1',
@@ -442,6 +466,7 @@ export const Q2MP07 = {
   nom_technique: 'Q2MP07',
   question:
     'Pensez-vous avoir des salariés qui refusent d’aller en formation par manque de maîtrise des compétences de base, y compris numériques ?',
+  thematique: thematiqueSituation[3],
   reponses: [
     {
       nom_technique: 'Q2MP07R1',
@@ -464,6 +489,7 @@ export const Q2MP08 = {
   nom_technique: 'Q2MP08',
   question:
     'Avez-vous repéré des salariés, déclarés inaptes à leurs postes pour raisons de santé, qui se voient proposer un reclassement vers des postes administratifs et le refusent ?',
+  thematique: thematiqueSituation[3],
   reponses: [
     {
       nom_technique: 'Q2MP08R1',

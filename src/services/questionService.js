@@ -1,19 +1,26 @@
-import * as diagnosticRisques from './../data/diagnostic_risques'
-import * as evaluationImpact from './../data/evaluation_impact'
+import * as diagnosticRisques from './../data/situations/diagnostic_risques'
+import * as evaluationImpact from './../data/situations/evaluation_impact'
 
 const questions = {
   diag_risques_entreprise: diagnosticRisques,
   evaluation_impact_general: evaluationImpact,
 }
 
+export function detailPourQuestion(nomTechniqueSansVariantDeSituation, question) {
+  const questionsPourSituation = questions[nomTechniqueSansVariantDeSituation]
+  if (!questionsPourSituation) return undefined
+
+  const questionDetails = questionsPourSituation[question]
+  if (!questionDetails) return undefined
+
+  return questionDetails
+}
+
 export function reponsesPourQuestion(nomTechniqueSansVariantDeSituation, question) {
-  const questionsPourSituation = questions[nomTechniqueSansVariantDeSituation];
-  if (!questionsPourSituation) return undefined;
+  const questionDetails = detailPourQuestion(nomTechniqueSansVariantDeSituation, question)
+  if (!questionDetails) return undefined
 
-  const questionDetails = questionsPourSituation[question];
-  if (!questionDetails) return undefined;
-
-  return questionDetails.reponses;
+  return questionDetails.reponses
 }
 
 export function scoreDeReponsePourQuestion(nomTechniqueSansVariantDeSituation, question, reponse) {

@@ -19,8 +19,8 @@ const assigneEvaluationIdDepuisParametre = async () => {
   const evaluation = await recupereEvaluation(evaluationId)
   const campagne = await recupereCampagne(evaluation.campagne_id)
 
-  const situation = campagne.situations.find((situation) =>
-    situation.nom_technique_sans_variant === 'evaluation_impact_general'
+  const situation = campagne.situations.find(
+    (situation) => situation.nom_technique_sans_variant === 'evaluation_impact_general',
   )
   router.push(`/situations/${situation.id}`)
 }

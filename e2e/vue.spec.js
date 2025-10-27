@@ -4,6 +4,7 @@ import { mockApiCampagne } from './fixtures/campagne';
 import { mockApiCampagne2 } from './fixtures/campagne2';
 
 test('Complète le premier questionnaire', async ({ page }) => {
+  const sousMenuThematiqueActif = '#diag_risques_entreprise .fr-sidemenu__item.fr-sidemenu__item--active'
   const evaluationId = 1;
   await page.route('*/**/api/evaluations', (route) => {
     route.fulfill({
@@ -31,6 +32,9 @@ test('Complète le premier questionnaire', async ({ page }) => {
   await page.goto('/');
 
   await page.click('button:has-text("Commencer")');
+  await expect(page.locator('.progress-bar-fill')).toHaveAttribute('style', 'width: 50%;');
+
+  await expect(page.locator(sousMenuThematiqueActif)).toHaveText("Identité & culture d'organisation")
 
   await expect(page).toHaveURL(`/situations/${mockApiCampagne.situations[0].id}`)
 
@@ -43,6 +47,7 @@ test('Complète le premier questionnaire', async ({ page }) => {
   await choicesList.first().click();
 
   await page.click('button:has-text("Continuer")');
+  await expect(page.locator(sousMenuThematiqueActif)).toHaveText("Gestion des compétences")
 
   const inputField = page.locator('input[type="text"]');
   await inputField.fill('Finance');
@@ -61,6 +66,7 @@ test('Complète le premier questionnaire', async ({ page }) => {
 });
 
 test('reprend le deuxième questionnaire', async ({ page }) => {
+  const sousMenuThematiqueActif = '.fr-sidemenu__item.fr-sidemenu__item--active button[aria-controls=evaluation_impact_general__constructys]'
   const evaluationId = "evaluation-123456"
   const campagneId = "campagne-123456"
   await page.route(`*/**/api/evaluations/${evaluationId}`, (route) => {
@@ -86,6 +92,7 @@ test('reprend le deuxième questionnaire', async ({ page }) => {
 
   await page.goto(`/evaluation-impact?evaluation_id=${evaluationId}`);
 
+  await expect(page.locator(sousMenuThematiqueActif)).toHaveText("Diagnostic des impacts sponsorisé par Constructys")
   await expect(page.locator('legend')).toHaveText("Avez-vous parfois l'impression de devoir prendre plus de temps que nécessaire pour vous assurer que vos collaborateurs ou collaboratrices ont bien compris certaines informations ?");
 
   const choicesList1 = page.locator('label');
