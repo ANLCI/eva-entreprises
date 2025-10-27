@@ -11,6 +11,8 @@ import {
   getEvenementAffichageQuestionParams,
 } from './../services/evenementService'
 
+import ProgressBar from './../components/ProgressBar.vue'
+
 import { useEvaluationStore } from './../stores/evaluationStore'
 import { useAlertStore } from '../stores/alertStore'
 
@@ -149,11 +151,19 @@ onMounted(() => {
 
 <template>
   <div class="fr-container">
-    <div v-if="questions">
-      <div>Question {{ currentQuestionIndex + 1 }}/{{ questions.length }}</div>
-      <br />
+    <div v-if="questions" class="questionnaire-container">
+      <ProgressBar :current-value="currentQuestionIndex + 1" :max-value="questions.length" />
 
-      <div v-if="currentQuestion">
+      <div v-if="currentQuestion" class="questionnaire">
+        <DsfrButton
+          :disabled="currentQuestionIndex === 0"
+          label="< Précédent"
+          @click="prevQuestion"
+          tertiary
+          no-outline
+          class="questionnaire__bouton-precedent"
+        />
+
         <QuestionInput
           :currentQuestion="currentQuestion"
           v-model="selectedAnswer"
@@ -162,24 +172,13 @@ onMounted(() => {
           @prevQuestion="prevQuestion"
           @nextQuestion="nextQuestion"
         />
-        <div class="actions">
-          <div>
-            <DsfrButton
-              v-if="currentQuestionIndex !== 0"
-              label="Question précédente"
-              @click="prevQuestion"
-              tertiary
-            />
-          </div>
-          <div>
-            <DsfrButton
-              :label="labelBoutonSuivant"
-              @click="nextQuestion"
-              primary
-              :disabled="selectedAnswer === null || isLoading"
-            />
-          </div>
-        </div>
+
+        <DsfrButton
+          :label="labelBoutonSuivant"
+          @click="nextQuestion"
+          primary
+          :disabled="selectedAnswer === null || isLoading"
+        />
       </div>
       <div v-else>
         <DsfrAlert type="warning" title="Pas de question disponible" />
@@ -189,15 +188,28 @@ onMounted(() => {
 </template>
 
 <style>
-.actions {
+.questionnaire-container {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 3rem;
+  padding-bottom: 3rem;
 }
 
-.loader {
+.questionnaire {
   display: flex;
-  justify-content: center;
-  padding: 4rem;
-  width: 100%;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.questionnaire .fr-fieldset {
+  margin-bottom: 0;
+}
+
+.questionnaire .fr-fieldset .fr-fieldset__element:last-child {
+  margin-bottom: 0;
+}
+
+.questionnaire__bouton-precedent {
+  margin-left: -1rem;
 }
 </style>
