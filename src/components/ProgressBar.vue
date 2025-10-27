@@ -29,7 +29,7 @@ const progressPercentage = computed(() => {
 
 <style scoped>
 .progress-bar {
-  height: 0.5rem;
+  height: var(--progress-bar-height, 0.5rem);
   width: 100%;
   background-color: var(--background-contrast-grey);
   overflow: hidden;
