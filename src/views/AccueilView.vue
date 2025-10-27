@@ -39,7 +39,13 @@ const commencer = async () => {
 </script>
 
 <template>
-  <div class="fr-container">
+  <div class="fr-container page-accueil">
     <DsfrButton label="Commencer" @click="commencer" primary :disabled="isLoading" />
   </div>
 </template>
+
+<style>
+.page-accueil {
+  padding: 3rem 0;
+}
+</style>
