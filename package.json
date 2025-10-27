@@ -17,7 +17,7 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "@captive_owner/vue-dsfr": "^3.7.5",
+    "@captive_owner/vue-dsfr": "^3.7.7",
     "@gouvfr/dsfr": "^1.14.1",
     "@tanstack/vue-query": "^5.89.0",
     "express": "4.x",
