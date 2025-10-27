@@ -35,7 +35,7 @@ export const mockApiQuestionnaire1 = [
   },
   {
     "id": "6746bda0-5e5c-4eda-a201-af6b68a47efd",
-    "nom_technique": "Q1PG04",
+    "nom_technique": "Q1PG09",
     "suffix_reponse": "",
     "description": "",
     "metacompetence": null,

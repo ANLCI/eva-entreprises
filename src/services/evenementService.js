@@ -75,7 +75,11 @@ export function getEvenementAffichageQuestionParams(question, situation) {
 export function getEvenementResponseParams(situation, questionNomTechnique, reponse, intitule) {
   const baseParams = getEvenementParamsBase(EVALUATION_NAMES.REPONSE, situation.nom_technique)
 
-  const score = scoreDeReponsePourQuestion(situation.nom_technique_sans_variant, questionNomTechnique, reponse)
+  const score = scoreDeReponsePourQuestion(
+    situation.nom_technique_sans_variant,
+    questionNomTechnique,
+    reponse,
+  )
   const scoreMax = scoreMaxPourQuestion(situation.nom_technique_sans_variant, questionNomTechnique)
 
   return {

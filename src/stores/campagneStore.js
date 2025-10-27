@@ -38,5 +38,8 @@ export const useCampagneStore = defineStore('campagne', {
 
       return this.situations.find((s) => s.id === situationId)
     },
+    getSituations() {
+      return this.situations
+    },
   },
 })

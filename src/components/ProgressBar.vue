@@ -1,30 +1,27 @@
 <template>
   <div class="progress-bar">
-    <div
-      class="progress-bar-fill"
-      :style="{ width: progressPercentage }"
-    ></div>
+    <div class="progress-bar-fill" :style="{ width: progressPercentage }"></div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 const props = defineProps({
   currentValue: {
     type: Number,
-    required: true
+    required: true,
   },
   maxValue: {
     type: Number,
-    required: true
-  }
-});
+    required: true,
+  },
+})
 
 const progressPercentage = computed(() => {
-  const percentage = (props.currentValue / props.maxValue) * 100;
-  return `${percentage}%`;
-});
+  const percentage = (props.currentValue / props.maxValue) * 100
+  return `${percentage}%`
+})
 </script>
 
 <style scoped>
