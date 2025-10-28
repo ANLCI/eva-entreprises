@@ -221,6 +221,12 @@ onMounted(() => {
   margin-left: -1rem;
 }
 
+.fr-fieldset,
+.fr-select-group,
+.fr-input-group {
+  max-width: 620px;
+}
+
 @media screen and (max-width: 768px) {
   .questionnaire-container {
     gap: 1.5rem;
