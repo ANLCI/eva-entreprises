@@ -1,6 +1,6 @@
 import { useEvaluationStore } from './../stores/evaluationStore'
 import { useEvenementStore } from './../stores/evenementStore'
-import { scoreDeReponsePourQuestion, scoreMaxPourQuestion } from './questionService'
+import { reponsePourQuestion, scoreMaxPourQuestion } from './questionService'
 
 const EVALUATION_NAMES = {
   DEMARRAGE: 'demarrage',
@@ -72,25 +72,23 @@ export function getEvenementAffichageQuestionParams(question, situation) {
   }
 }
 
-export function getEvenementResponseParams(situation, questionNomTechnique, reponse, intitule) {
+export function getEvenementResponseParams(situation, questionNomTechnique, reponseId) {
   const baseParams = getEvenementParamsBase(EVALUATION_NAMES.REPONSE, situation.nom_technique)
-
-  const score = scoreDeReponsePourQuestion(
+  const scoreMax = scoreMaxPourQuestion(situation.nom_technique_sans_variant, questionNomTechnique)
+  const reponseDetails = reponsePourQuestion(
     situation.nom_technique_sans_variant,
     questionNomTechnique,
-    reponse,
+    reponseId,
   )
-  const scoreMax = scoreMaxPourQuestion(situation.nom_technique_sans_variant, questionNomTechnique)
 
   return {
     ...baseParams,
     ...{
       donnees: {
         question: questionNomTechnique,
-        reponse: reponse,
-        intitule: intitule,
-        score: score,
+        reponse: reponseId,
         scoreMax: scoreMax,
+        ...reponseDetails,
       },
     },
   }
