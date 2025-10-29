@@ -23,11 +23,15 @@ export function reponsesPourQuestion(nomTechniqueSansVariantDeSituation, questio
   return questionDetails.reponses
 }
 
-export function scoreDeReponsePourQuestion(nomTechniqueSansVariantDeSituation, question, reponse) {
+export function reponsePourQuestion(nomTechniqueSansVariantDeSituation, question, reponse) {
   const reponses = reponsesPourQuestion(nomTechniqueSansVariantDeSituation, question)
-  if (!reponses) return 0
+  if (!reponses) return null
 
-  const reponseDetails = reponses.find((r) => r.nom_technique === reponse)
+  return reponses.find((r) => r.nom_technique === reponse)
+}
+
+export function scoreDeReponsePourQuestion(nomTechniqueSansVariantDeSituation, question, reponse) {
+  const reponseDetails = reponsePourQuestion(nomTechniqueSansVariantDeSituation, question, reponse)
   const score = reponseDetails ? reponseDetails.score : 0
 
   return score

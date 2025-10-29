@@ -114,7 +114,6 @@ const enregistreEvenementReponse = async () => {
     situation,
     currentQuestion.value.nom_technique,
     selectedAnswer.value,
-    currentQuestion.value.intitule,
   )
   return mutation.mutateAsync(evenementParams)
 }
