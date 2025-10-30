@@ -3,6 +3,7 @@ import {
   reponsesPourQuestion,
   scoreDeReponsePourQuestion,
   scoreMaxPourQuestion,
+  detailPourQuestion
 } from './questionService'
 
 const situation = 'diag_risques_entreprise'
@@ -73,3 +74,34 @@ describe('#scoreMaxPourQuestion', () => {
     expect(maxScore).toBe(0)
   })
 })
+
+describe('#detailPourQuestion', () => {
+  it('doit retourner les détails pour une question valide', () => {
+    const questionDetails = detailPourQuestion(situation, 'Q1PG01')
+    expect(questionDetails).toEqual(
+      expect.objectContaining({
+        nom_technique: 'Q1PG01',
+      }),
+    );
+  });
+
+
+  it('doit retourner les détails pour une question valide avec un variant', () => {
+    const questionDetails = detailPourQuestion(situation, 'Q1PG01__variant')
+    expect(questionDetails).toEqual(
+      expect.objectContaining({
+        nom_technique: 'Q1PG01',
+      }),
+    );
+  });
+
+  it('doit retourner undefined pour une question invalide', () => {
+    const questionDetails = detailPourQuestion(situation, 'QuestionInvalide')
+    expect(questionDetails).toBeUndefined()
+  });
+
+  it('doit retourner undefined pour une situation invalide', () => {
+    const questionDetails = detailPourQuestion('situationInvalide', 'Q1PG01')
+    expect(questionDetails).toBeUndefined()
+  });
+});
