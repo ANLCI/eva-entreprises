@@ -6,7 +6,20 @@ import path from 'path';
 const app = express();
 
 const directory = '/' + (process.env.STATIC_DIR || 'dist');
-app.use(express.static(path.join(process.cwd(), directory)));
+const distPath = path.join(process.cwd(), directory)
+app.use(
+  express.static(distPath, {
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith('index.html')) {
+        // Toujours recharger le index.html
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      } else {
+        // Les autres fichiers peuvent être mis en cache longtemps
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      }
+    },
+  }),
+);
 
 // Redirige toutes les requêtes vers index.html
 app.get('*', (req, res) => {
