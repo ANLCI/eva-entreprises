@@ -10,7 +10,8 @@ export function detailPourQuestion(nomTechniqueSansVariantDeSituation, question)
   const questionsPourSituation = questions[nomTechniqueSansVariantDeSituation]
   if (!questionsPourSituation) return undefined
 
-  const questionDetails = questionsPourSituation[question]
+  const question_sans_variant = question.split('__')[0]
+  const questionDetails = questionsPourSituation[question_sans_variant]
   if (!questionDetails) return undefined
 
   return questionDetails
