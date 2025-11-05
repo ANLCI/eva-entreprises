@@ -13,12 +13,6 @@ executors:
 
       VITE_ID_BENEFICIAIRE_EVA_ENTREPRISES: id_beneficiaire
       VITE_CODE_CAMPAGNE_EVA_ENTREPRISES: EVAETGILLES
-
-      VITE_ID_QUESTIONNAIRE_EVA_ENTREPRISES: id_questionnaire_diagnostic_risques
-      VITE_NOM_TECHNIQUE_SITUATION_EVA_ENTREPRISES: diag_risques_entreprise
-
-      VITE_ID_QUESTIONNAIRE_EVALUATION_IMPACT: id_questionnaire_evaluation_risques
-      VITE_NOM_TECHNIQUE_SITUATION_EVALUATION_IMPACT: evaluation_impact_general
 commands:
   install_dependencies:
     steps:
@@ -62,6 +56,8 @@ jobs:
     steps:
       - checkout
       - restore_node_modules_cache
+      - run: cp .env.test .env
+      - run: cat .env
       - run: npm install -D @playwright/test && npx playwright install --with-deps
       - run: npm run build
       - run: xvfb-run npx playwright test
