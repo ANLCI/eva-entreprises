@@ -1,13 +1,13 @@
 import { test, expect } from '@playwright/test';
 
 import { mockApiCampagne } from './fixtures/campagne';
-import { mockApiCampagne2 } from './fixtures/campagne2';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => localStorage.clear());
 });
 
+const beneficiaireId = "12345"
 
 test('Complète le premier questionnaire', async ({ page }) => {
   const sousMenuThematiqueActif = '#diag_risques_entreprise .fr-sidemenu__item.fr-sidemenu__item--active'
@@ -19,9 +19,7 @@ test('Complète le premier questionnaire', async ({ page }) => {
     });
   });
 
-  // eslint-disable-next-line no-undef
-  const codeCampagne = process.env.VITE_CODE_CAMPAGNE_EVA_ENTREPRISES;
-  await page.route(`*/**/api/campagnes/${codeCampagne}`, (route) => {
+  await page.route(`*/**/api/campagnes/${mockApiCampagne.code}`, (route) => {
     route.fulfill({
       contentType: 'application/json',
       body: JSON.stringify(mockApiCampagne),
@@ -35,7 +33,7 @@ test('Complète le premier questionnaire', async ({ page }) => {
     });
   });
 
-  await page.goto('/');
+  await page.goto(`/?code=${mockApiCampagne.code}&beneficiaire_id=${beneficiaireId}`);
 
   await page.click('button:has-text("Commencer")');
   await expect(page.locator('.progress-bar-fill')).toHaveAttribute('style', 'width: 50%;');
@@ -106,30 +104,16 @@ test('reprend le deuxième questionnaire', async ({ page }) => {
   await choicesList1.first().click();
 });
 
-test("Commence un questionnaire à partir d'un code campagne", async ({ page }) => {
-  const evaluationId = 1;
-  await page.route('*/**/api/evaluations', (route) => {
-    route.fulfill({
-      contentType: 'application/json',
-      body: JSON.stringify({ id: evaluationId }),
-    });
-  });
-  await page.route(`*/**/api/campagnes/${mockApiCampagne2.code}`, (route) => {
-    route.fulfill({
-      contentType: 'application/json',
-      body: JSON.stringify(mockApiCampagne2),
-    });
-  });
-  await page.route('*/**/api/evenements', (route) => {
+test("l'accueil redirige vers l'admin si le code campagne est manquant", async ({ page }) => {
+  // eslint-disable-next-line no-undef
+  await page.route(process.env.VITE_ADMIN_BASE_URL, (route) => {
     route.fulfill({
       contentType: 'application/json',
       body: JSON.stringify({}),
     });
   });
 
-  await page.goto(`/?code=${mockApiCampagne2.code}`);
-
-  await page.click('button:has-text("Commencer")');
-
-  await expect(page).toHaveURL(`/situations/${mockApiCampagne2.situations[0].id}`)
+  await page.goto('/');
+  // eslint-disable-next-line no-undef
+  await expect(page).toHaveURL(process.env.VITE_ADMIN_BASE_URL);
 });
