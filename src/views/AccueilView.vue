@@ -13,9 +13,17 @@ const isLoading = ref(false)
 const alertStore = useAlertStore()
 const route = useRoute()
 
-const codeCampagne = route.query.code ?? import.meta.env.VITE_CODE_CAMPAGNE_EVA_ENTREPRISES
+const codeCampagne = route.query.code
 const beneficiaireId =
-  route.query.beneficiaire_id ?? import.meta.env.VITE_ID_BENEFICIAIRE_EVA_ENTREPRISES
+  route.query.beneficiaire_id
+
+const redirigeVersAdmin = () => {
+  setTimeout(() => {
+    window.location.href = import.meta.env.VITE_ADMIN_BASE_URL
+  }, 500)
+}
+
+if (!beneficiaireId || !codeCampagne) redirigeVersAdmin();
 
 const commencer = async () => {
   isLoading.value = true
