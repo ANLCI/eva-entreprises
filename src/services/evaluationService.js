@@ -58,7 +58,10 @@ export function getEvaluationParams(code_campagne, beneficiaire_id) {
 export async function commenceNouvelleEvaluation(code_campagne, beneficiaire_id) {
   const evaluationStore = useEvaluationStore()
   const evenementStore = useEvenementStore()
+  const campagneStore = useCampagneStore()
   const params = getEvaluationParams(code_campagne, beneficiaire_id)
+
+  await campagneStore.resetCampagne()
 
   try {
     const data = await creeEvaluation(params)

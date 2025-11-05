@@ -14,6 +14,7 @@ import {
 import ProgressBar from './../components/ProgressBar.vue'
 
 import { useEvaluationStore } from './../stores/evaluationStore'
+import { useCampagneStore } from './../stores/campagneStore'
 import { useAlertStore } from '../stores/alertStore'
 
 import QuestionInput from './QuestionInput.vue'
@@ -24,6 +25,7 @@ const router = useRouter()
 const evaluationStore = useEvaluationStore()
 const evaluationId = evaluationStore.evaluationId
 
+const campagneStore = useCampagneStore()
 const situation = props.situation
 const nomTechniqueSituation = situation.nom_technique
 
@@ -56,13 +58,16 @@ const mutation = useMutation({
   },
 })
 
-const currentQuestionIndex = ref(0)
+const currentQuestionIndex = ref(campagneStore.questionCourante)
+
 const answers = ref({})
 const isLoading = ref(false)
 
 const currentQuestion = computed(() => {
   return questions ? questions[currentQuestionIndex.value] : null
 })
+
+emit('updateCurrentQuestion', currentQuestion.value)
 
 const selectedAnswer = computed({
   get: () => {
@@ -90,6 +95,7 @@ const nextQuestion = async () => {
 
     if (currentQuestionIndex.value < questions.length - 1) {
       currentQuestionIndex.value++
+      campagneStore.setQuestionCourante(currentQuestionIndex.value)
     } else {
       await enregistreEvenementFinSituation()
       redirigeVersEvaluation()
@@ -126,6 +132,7 @@ const enregistreEvenementFinSituation = async () => {
 const prevQuestion = () => {
   if (currentQuestionIndex.value > 0) {
     currentQuestionIndex.value--
+    campagneStore.setQuestionCourante(currentQuestionIndex.value)
   }
 }
 

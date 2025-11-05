@@ -26,4 +26,5 @@ export const useEvenementStore = defineStore('evenement', {
       this.session_id = sessionId
     },
   },
+  persist: true,
 })

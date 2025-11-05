@@ -10,4 +10,5 @@ export const useEvaluationStore = defineStore('evaluation', {
       this.evaluationId = id
     },
   },
+  persist: true,
 })

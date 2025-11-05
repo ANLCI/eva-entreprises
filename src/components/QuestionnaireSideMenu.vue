@@ -15,19 +15,26 @@ onMounted(async () => {
   const situations = await recupereSituations()
   situationCourante = situations.find((situation) => situation.id === route.params.id)
 
+  let thematiqueText = ''
+  if (props.currentQuestion) {
+    const questionData = detailPourQuestion(
+      situationCourante.nom_technique_sans_variant,
+      props.currentQuestion.nom_technique,
+    )
+    thematiqueText = questionData.thematique
+  }
   menuItems.value = situations.map((situation) => {
     const active = situationCourante.nom_technique === situation.nom_technique
     const thematiqueItems = thematiques[situation.nom_technique_sans_variant]
-    let thematiqueActive = active
+
     const menuItemsForSituation = thematiqueItems
       ? thematiqueItems.map((item) => {
           const menu = {
             id: item.toLowerCase().replace(/\s+/g, '-'),
             to: '',
             text: item,
-            active: thematiqueActive,
+            active: thematiqueText == item,
           }
-          thematiqueActive = false
           return menu
         })
       : []
