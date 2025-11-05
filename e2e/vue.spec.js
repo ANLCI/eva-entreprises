@@ -3,6 +3,12 @@ import { test, expect } from '@playwright/test';
 import { mockApiCampagne } from './fixtures/campagne';
 import { mockApiCampagne2 } from './fixtures/campagne2';
 
+test.beforeEach(async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => localStorage.clear());
+});
+
+
 test('Complète le premier questionnaire', async ({ page }) => {
   const sousMenuThematiqueActif = '#diag_risques_entreprise .fr-sidemenu__item.fr-sidemenu__item--active'
   const evaluationId = 1;
