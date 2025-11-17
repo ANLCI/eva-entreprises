@@ -1,55 +1,40 @@
 import { test, expect } from '@playwright/test';
 
 import { mockApiCampagne } from './fixtures/campagne';
+import {
+  goToCampagne,
+  getQuestionnaireSelectors,
+  mockAdminBaseRoute,
+  mockCampagneRoutes,
+  mockEvaluationResumptionRoutes,
+} from './utils/testHelpers';
 
 const beneficiaireId = "12345"
 
 test('Complète le premier questionnaire', async ({ page }) => {
   const sousMenuThematiqueActif = '#diag_risques_entreprise .fr-sidemenu__item.fr-sidemenu__item--active'
   const evaluationId = 1;
-  await page.route('*/**/api/evaluations', (route) => {
-    route.fulfill({
-      contentType: 'application/json',
-      body: JSON.stringify({ id: evaluationId }),
-    });
-  });
+  await mockCampagneRoutes(page, { evaluationId });
+  await goToCampagne(page, { beneficiaireId });
 
-  await page.route(`*/**/api/campagnes/${mockApiCampagne.code}`, (route) => {
-    route.fulfill({
-      contentType: 'application/json',
-      body: JSON.stringify(mockApiCampagne),
-    });
-  });
+  const selectors = getQuestionnaireSelectors(page);
 
-  await page.route('*/**/api/evenements', (route) => {
-    route.fulfill({
-      contentType: 'application/json',
-      body: JSON.stringify({}),
-    });
-  });
-
-  await page.goto(`/?code=${mockApiCampagne.code}&beneficiaire_id=${beneficiaireId}`);
-
-  await page.click('button:has-text("Commencer")');
-  await expect(page.locator('.progress-bar-fill')).toHaveAttribute('style', 'width: 50%;');
-
+  await expect(selectors.progressBar).toHaveAttribute('style', 'width: 50%;');
   await expect(page.locator(sousMenuThematiqueActif)).toHaveText("Identité & culture d'organisation")
 
   await expect(page).toHaveURL(`/situations/${mockApiCampagne.situations[0].id}`)
 
-  await expect(page.locator('legend')).toHaveText('Quelle est la taille de votre entreprise/structure ?');
+  await expect(selectors.legend).toHaveText('Quelle est la taille de votre entreprise/structure ?');
 
-  const choicesList = page.locator('label');
-  await expect(choicesList.first()).toContainText('250 salariés et +');
-  await expect(choicesList.nth(1)).toContainText('50 à 249 salariés');
+  await expect(selectors.labels.first()).toContainText('250 salariés et +');
+  await expect(selectors.labels.nth(1)).toContainText('50 à 249 salariés');
 
-  await choicesList.first().click();
+  await selectors.labels.first().click();
 
-  page.waitForFunction(() => document.querySelector('label')?.textContent?.includes('A quelle branche votre structure est-elle rattachée ?'))
+  await expect(selectors.legend).toHaveText('A quelle branche votre structure est-elle rattachée ?');
   await expect(page.locator(sousMenuThematiqueActif)).toHaveText("Gestion des compétences")
 
-  const inputField = page.locator('input[type="text"]');
-  await inputField.fill('Finance');
+  await selectors.champTexte.fill('Finance');
 
   await page.click('button:has-text("Valider")');
 
@@ -67,70 +52,27 @@ test('Complète le premier questionnaire', async ({ page }) => {
 test('passe automatiquement la question radio puis affiche le bouton en revenant en arrière', async ({ page }) => {
   const sousMenuThematiqueActif = '#diag_risques_entreprise .fr-sidemenu__item.fr-sidemenu__item--active';
   const evaluationId = 2;
+  await mockCampagneRoutes(page, { evaluationId });
+  await goToCampagne(page, { beneficiaireId });
 
-  await page.route('*/**/api/evaluations', (route) => {
-    route.fulfill({
-      contentType: 'application/json',
-      body: JSON.stringify({ id: evaluationId }),
-    });
-  });
+  const selectors = getQuestionnaireSelectors(page);
 
-  await page.route(`*/**/api/campagnes/${mockApiCampagne.code}`, (route) => {
-    route.fulfill({
-      contentType: 'application/json',
-      body: JSON.stringify(mockApiCampagne),
-    });
-  });
-
-  await page.route('*/**/api/evenements', (route) => {
-    route.fulfill({
-      contentType: 'application/json',
-      body: JSON.stringify({}),
-    });
-  });
-
-  await page.goto(`/?code=${mockApiCampagne.code}&beneficiaire_id=${beneficiaireId}`);
-
-  await page.click('button:has-text("Commencer")');
   await expect(page.locator(sousMenuThematiqueActif)).toHaveText("Identité & culture d'organisation");
+  await expect(selectors.legend).toHaveText('Quelle est la taille de votre entreprise/structure ?');
 
-  const legend = page.locator('legend');
-  await expect(legend).toHaveText('Quelle est la taille de votre entreprise/structure ?');
+  await selectors.labels.first().click();
+  await expect(selectors.legend).toHaveText('A quelle branche votre structure est-elle rattachée ?');
 
-  const radioChoices = page.locator('label');
-  await radioChoices.first().click();
-
-  page.waitForFunction(() => document.querySelector('label')?.textContent?.includes('A quelle branche'))
-
-  await page.click('button:has-text("< Précédent")');
-  await expect(legend).toHaveText('Quelle est la taille de votre entreprise/structure ?');
-  await expect(page.locator('button:has-text("Continuer")')).toBeVisible();
+  await selectors.boutonPrecedent.click();
+  await expect(selectors.legend).toHaveText('Quelle est la taille de votre entreprise/structure ?');
+  await expect(selectors.boutonContinuer).toBeVisible();
 });
 
 test('reprend le deuxième questionnaire', async ({ page }) => {
   const sousMenuThematiqueActif = '.fr-sidemenu__item.fr-sidemenu__item--active button[aria-controls=evaluation_impact_general__constructys]'
   const evaluationId = "evaluation-123456"
   const campagneId = "campagne-123456"
-  await page.route(`*/**/api/evaluations/${evaluationId}`, (route) => {
-    route.fulfill({
-      contentType: 'application/json',
-      body: JSON.stringify({ id: evaluationId, campagne_id: campagneId }),
-    });
-  });
-
-  await page.route(`*/**/api/campagnes/${campagneId}`, (route) => {
-    route.fulfill({
-      contentType: 'application/json',
-      body: JSON.stringify(mockApiCampagne),
-    });
-  });
-
-  await page.route('*/**/api/evenements', (route) => {
-    route.fulfill({
-      contentType: 'application/json',
-      body: JSON.stringify({}),
-    });
-  });
+  await mockEvaluationResumptionRoutes(page, { evaluationId, campagneId });
 
   await page.goto(`/evaluation-impact?evaluation_id=${evaluationId}`);
 
@@ -144,12 +86,7 @@ test('reprend le deuxième questionnaire', async ({ page }) => {
 
 test("l'accueil redirige vers l'admin si le code campagne est manquant", async ({ page }) => {
   // eslint-disable-next-line no-undef
-  await page.route(process.env.VITE_ADMIN_BASE_URL, (route) => {
-    route.fulfill({
-      contentType: 'application/json',
-      body: JSON.stringify({}),
-    });
-  });
+  await mockAdminBaseRoute(page, process.env.VITE_ADMIN_BASE_URL);
 
   await page.goto('/');
   // eslint-disable-next-line no-undef
