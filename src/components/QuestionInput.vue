@@ -29,47 +29,47 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, nextTick } from 'vue'
+import { determineQuestionInputType } from '@/utils/questionInputType'
 
 const props = defineProps({
   modelValue: [String, Number, null],
   currentQuestion: Object,
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'next-question'])
 
 const internalValue = ref(props.modelValue)
-const typeInput = ref(definiTypeInput())
-
-function definiTypeInput() {
-  if (
-    props.currentQuestion &&
-    props.currentQuestion.choix &&
-    props.currentQuestion.choix.length <= 5
-  ) {
-    return 'radio'
-  } else if (props.currentQuestion && props.currentQuestion.choix) {
-    return 'select'
-  } else {
-    return 'text'
-  }
-}
+const typeInput = ref(determineQuestionInputType(props.currentQuestion))
+const isSyncingFromModelValue = ref(false)
 
 watch(
   () => props.modelValue,
   (newVal) => {
+    isSyncingFromModelValue.value = true
     internalValue.value = newVal
+    nextTick(() => {
+      isSyncingFromModelValue.value = false
+    })
   },
 )
 
 watch(internalValue, (newVal) => {
   emit('update:modelValue', newVal)
+  if (
+    !isSyncingFromModelValue.value &&
+    typeInput.value === 'radio' &&
+    newVal !== null &&
+    newVal !== undefined
+  ) {
+    emit('next-question')
+  }
 })
 
 watch(
   () => props.currentQuestion,
   () => {
-    typeInput.value = definiTypeInput()
+    typeInput.value = determineQuestionInputType(props.currentQuestion)
   },
   { deep: true },
 )

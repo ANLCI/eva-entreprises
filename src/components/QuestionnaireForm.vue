@@ -12,6 +12,7 @@ import {
 } from './../services/evenementService'
 
 import ProgressBar from './../components/ProgressBar.vue'
+import { determineQuestionInputType } from '../utils/questionInputType'
 
 import { useEvaluationStore } from './../stores/evaluationStore'
 import { useAlertStore } from '../stores/alertStore'
@@ -63,6 +64,9 @@ const isLoading = ref(false)
 const currentQuestion = computed(() => {
   return questions ? questions[currentQuestionIndex.value] : null
 })
+const currentQuestionInputType = computed(() => {
+  return determineQuestionInputType(currentQuestion.value)
+})
 
 const selectedAnswer = computed({
   get: () => {
@@ -71,6 +75,9 @@ const selectedAnswer = computed({
   set: (value) => {
     answers.value[currentQuestion.value.nom_technique] = value
   },
+})
+const afficheBoutonSuivant = computed(() => {
+  return currentQuestionInputType.value !== 'radio' || selectedAnswer.value !== null
 })
 
 /**
@@ -171,11 +178,12 @@ onMounted(() => {
           v-model="selectedAnswer"
           :currentQuestionIndex="currentQuestionIndex"
           :labelBoutonSuivant="labelBoutonSuivant"
-          @prevQuestion="prevQuestion"
-          @nextQuestion="nextQuestion"
+          @prev-question="prevQuestion"
+          @next-question="nextQuestion"
         />
 
         <DsfrButton
+          v-if="afficheBoutonSuivant"
           :label="labelBoutonSuivant"
           @click="nextQuestion"
           primary
