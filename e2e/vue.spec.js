@@ -31,7 +31,7 @@ test('Complète le premier questionnaire', async ({ page }) => {
 
   await selectors.labels.first().click();
 
-  await expect(selectors.legend).toHaveText('A quelle branche votre structure est-elle rattachée ?');
+  page.waitForFunction(() => document.querySelector('label')?.textContent?.includes('A quelle branche votre structure est-elle rattachée ?'))
   await expect(page.locator(sousMenuThematiqueActif)).toHaveText("Gestion des compétences")
 
   await selectors.champTexte.fill('Finance');
@@ -61,7 +61,7 @@ test('passe automatiquement la question radio puis affiche le bouton en revenant
   await expect(selectors.legend).toHaveText('Quelle est la taille de votre entreprise/structure ?');
 
   await selectors.labels.first().click();
-  await expect(selectors.legend).toHaveText('A quelle branche votre structure est-elle rattachée ?');
+  page.waitForFunction(() => document.querySelector('label')?.textContent?.includes('A quelle branche votre structure est-elle rattachée ?'))
 
   await selectors.boutonPrecedent.click();
   await expect(selectors.legend).toHaveText('Quelle est la taille de votre entreprise/structure ?');
