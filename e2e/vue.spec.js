@@ -45,7 +45,7 @@ test('Complète le premier questionnaire', async ({ page }) => {
 
   await choicesList.first().click();
 
-  await page.click('button:has-text("Continuer")');
+  page.waitForFunction(() => document.querySelector('label')?.textContent?.includes('A quelle branche votre structure est-elle rattachée ?'))
   await expect(page.locator(sousMenuThematiqueActif)).toHaveText("Gestion des compétences")
 
   const inputField = page.locator('input[type="text"]');
@@ -62,6 +62,49 @@ test('Complète le premier questionnaire', async ({ page }) => {
     });
   });
   await page.waitForURL(evaluationUrl)
+});
+
+test('passe automatiquement la question radio puis affiche le bouton en revenant en arrière', async ({ page }) => {
+  const sousMenuThematiqueActif = '#diag_risques_entreprise .fr-sidemenu__item.fr-sidemenu__item--active';
+  const evaluationId = 2;
+
+  await page.route('*/**/api/evaluations', (route) => {
+    route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({ id: evaluationId }),
+    });
+  });
+
+  await page.route(`*/**/api/campagnes/${mockApiCampagne.code}`, (route) => {
+    route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify(mockApiCampagne),
+    });
+  });
+
+  await page.route('*/**/api/evenements', (route) => {
+    route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({}),
+    });
+  });
+
+  await page.goto(`/?code=${mockApiCampagne.code}&beneficiaire_id=${beneficiaireId}`);
+
+  await page.click('button:has-text("Commencer")');
+  await expect(page.locator(sousMenuThematiqueActif)).toHaveText("Identité & culture d'organisation");
+
+  const legend = page.locator('legend');
+  await expect(legend).toHaveText('Quelle est la taille de votre entreprise/structure ?');
+
+  const radioChoices = page.locator('label');
+  await radioChoices.first().click();
+
+  page.waitForFunction(() => document.querySelector('label')?.textContent?.includes('A quelle branche'))
+
+  await page.click('button:has-text("< Précédent")');
+  await expect(legend).toHaveText('Quelle est la taille de votre entreprise/structure ?');
+  await expect(page.locator('button:has-text("Continuer")')).toBeVisible();
 });
 
 test('reprend le deuxième questionnaire', async ({ page }) => {
