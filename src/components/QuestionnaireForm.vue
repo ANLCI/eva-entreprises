@@ -163,36 +163,38 @@ onMounted(() => {
     <div v-if="questions" class="questionnaire-container">
       <ProgressBar :current-value="currentQuestionIndex + 1" :max-value="questions.length" />
 
-      <div v-if="currentQuestion" class="questionnaire">
-        <DsfrButton
-          :disabled="currentQuestionIndex === 0"
-          label="< Précédent"
-          @click="prevQuestion"
-          tertiary
-          no-outline
-          class="questionnaire__bouton-precedent"
-        />
+      <Transition name="question-slide" mode="out-in">
+        <div v-if="currentQuestion" :key="currentQuestion.nom_technique" class="questionnaire">
+          <DsfrButton
+            :disabled="currentQuestionIndex === 0"
+            label="< Précédent"
+            @click="prevQuestion"
+            tertiary
+            no-outline
+            class="questionnaire__bouton-precedent"
+          />
 
-        <QuestionInput
-          :currentQuestion="currentQuestion"
-          v-model="selectedAnswer"
-          :currentQuestionIndex="currentQuestionIndex"
-          :labelBoutonSuivant="labelBoutonSuivant"
-          @prev-question="prevQuestion"
-          @next-question="nextQuestion"
-        />
+          <QuestionInput
+            :currentQuestion="currentQuestion"
+            v-model="selectedAnswer"
+            :currentQuestionIndex="currentQuestionIndex"
+            :labelBoutonSuivant="labelBoutonSuivant"
+            @prev-question="prevQuestion"
+            @next-question="nextQuestion"
+          />
 
-        <DsfrButton
-          v-if="afficheBoutonSuivant"
-          :label="labelBoutonSuivant"
-          @click="nextQuestion"
-          primary
-          :disabled="selectedAnswer === null || isLoading"
-        />
-      </div>
-      <div v-else>
-        <DsfrAlert type="warning" title="Pas de question disponible" />
-      </div>
+          <DsfrButton
+            v-if="afficheBoutonSuivant"
+            :label="labelBoutonSuivant"
+            @click="nextQuestion"
+            primary
+            :disabled="selectedAnswer === null || isLoading"
+          />
+        </div>
+      </Transition>
+    </div>
+    <div v-else>
+      <DsfrAlert type="warning" title="Pas de question disponible" />
     </div>
   </div>
 </template>
@@ -226,6 +228,21 @@ onMounted(() => {
 
 .questionnaire__bouton-precedent {
   margin-left: -1rem;
+}
+
+.question-slide-enter-active,
+.question-slide-leave-active {
+  transition: opacity 250ms ease, transform 250ms ease;
+}
+
+.question-slide-enter-from {
+  opacity: 0;
+  transform: translateX(40px);
+}
+
+.question-slide-leave-to {
+  opacity: 0;
+  transform: translateX(-40px);
 }
 
 .fr-fieldset,
