@@ -1,5 +1,5 @@
 export default {
-  accessToken: 'ad7603d5788b492384bb8fd9d20da8b4',
+  accessToken: import.meta.env.VITE_ROLLBAR_ACCESS_TOKEN ?? '',
   captureUncaught: true,
   captureUnhandledRejections: true,
   payload: {
