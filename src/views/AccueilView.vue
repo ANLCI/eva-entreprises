@@ -14,8 +14,7 @@ const alertStore = useAlertStore()
 const route = useRoute()
 
 const codeCampagne = route.query.code
-const beneficiaireId =
-  route.query.beneficiaire_id
+const beneficiaireId = route.query.beneficiaire_id
 
 const redirigeVersAdmin = () => {
   setTimeout(() => {
@@ -23,7 +22,7 @@ const redirigeVersAdmin = () => {
   }, 500)
 }
 
-if (!beneficiaireId || !codeCampagne) redirigeVersAdmin();
+if (!beneficiaireId || !codeCampagne) redirigeVersAdmin()
 
 const commencer = async () => {
   isLoading.value = true
