@@ -10,10 +10,10 @@ const route = useRoute()
 const props = defineProps(['currentQuestion'])
 
 let situationCourante
+let situations = []
 
-onMounted(async () => {
-  const situations = await recupereSituations()
-  situationCourante = situations.find((situation) => situation.id === route.params.id)
+const construitMenu = () => {
+  if (!situationCourante) return
 
   menuItems.value = situations.map((situation) => {
     const active = situationCourante.nom_technique === situation.nom_technique
@@ -41,12 +41,34 @@ onMounted(async () => {
       menuItems: menuItemsForSituation,
     }
   })
+}
+
+const metAJourSituationCourante = (id) => {
+  if (!id || !situations.length) return
+  situationCourante = situations.find((situation) => String(situation.id) === String(id))
+  if (!situationCourante) {
+    console.warn('Situation non trouvée pour id :', id)
+    return
+  }
+  construitMenu()
+}
+
+onMounted(async () => {
+  situations = await recupereSituations()
+  metAJourSituationCourante(route.params.id)
 })
+
+watch(
+  () => route.params.id,
+  (newId) => {
+    metAJourSituationCourante(newId)
+  },
+)
 
 watch(
   () => props.currentQuestion,
   (newQuestion) => {
-    if (newQuestion) {
+    if (newQuestion && situationCourante) {
       const questionData = detailPourQuestion(
         situationCourante.nom_technique_sans_variant,
         newQuestion.nom_technique,

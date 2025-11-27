@@ -19,16 +19,24 @@ import { useAlertStore } from '../stores/alertStore'
 
 import QuestionInput from './QuestionInput.vue'
 
-const props = defineProps(['situation'])
+const props = defineProps(['situation', 'canPrevSituation', 'initialQuestionIndex'])
 
 const router = useRouter()
 const evaluationStore = useEvaluationStore()
-const evaluationId = evaluationStore.evaluationId
 
-const situation = props.situation
-const nomTechniqueSituation = situation.nom_technique
+const situation = computed(() => props.situation)
+const initialQuestionIndexProp = computed(() => {
+  const value = props.initialQuestionIndex
+  if (value === undefined || value === null || value === '') {
+    return 0
+  }
+  const parsed = Number(value)
+  return Number.isNaN(parsed) ? 0 : parsed
+})
+const canPrevSituation = computed(() => props.canPrevSituation)
+const nomTechniqueSituation = computed(() => situation.value?.nom_technique)
 
-const questions = situation.questions
+const questions = computed(() => situation.value?.questions)
 
 watch(
   () => evaluationStore.evaluationId,
@@ -42,7 +50,6 @@ watch(
 
 const emit = defineEmits(['updateCurrentQuestion'])
 
-const evaluationUrl = `${import.meta.env.VITE_ADMIN_BASE_URL}/evaluations/${evaluationId}`
 const alertStore = useAlertStore()
 
 const mutation = useMutation({
@@ -62,7 +69,7 @@ const answers = ref({})
 const isLoading = ref(false)
 
 const currentQuestion = computed(() => {
-  return questions ? questions[currentQuestionIndex.value] : null
+  return questions.value ? questions.value[currentQuestionIndex.value] : null
 })
 const currentQuestionInputType = computed(() => {
   return determineQuestionInputType(currentQuestion.value)
@@ -80,26 +87,17 @@ const afficheBoutonSuivant = computed(() => {
   return currentQuestionInputType.value !== 'radio' || selectedAnswer.value !== null
 })
 
-/**
- * Attend 500 millisecondes avant de rediriger pour que le serveur puisse calculer les résultats avant de l'afficher à l'utilisateur
- */
-const redirigeVersEvaluation = () => {
-  setTimeout(() => {
-    window.location.href = evaluationUrl
-  }, 500)
-}
-
 const nextQuestion = async () => {
   isLoading.value = true
 
   try {
     await enregistreEvenementReponse()
 
-    if (currentQuestionIndex.value < questions.length - 1) {
+    if (currentQuestionIndex.value < questions.value.length - 1) {
       currentQuestionIndex.value++
     } else {
       await enregistreEvenementFinSituation()
-      redirigeVersEvaluation()
+      emit('finSituation')
     }
   } finally {
     isLoading.value = false
@@ -107,18 +105,18 @@ const nextQuestion = async () => {
 }
 
 const enregistreEvenementDemarrage = async () => {
-  const evenementParams = getEvenementDemarrageParams(nomTechniqueSituation)
+  const evenementParams = getEvenementDemarrageParams(nomTechniqueSituation.value)
   return mutation.mutateAsync(evenementParams)
 }
 
 const enregistreEvenementAffichageQuestion = async (question) => {
-  const evenementParams = getEvenementAffichageQuestionParams(question, nomTechniqueSituation)
+  const evenementParams = getEvenementAffichageQuestionParams(question, nomTechniqueSituation.value)
   return mutation.mutateAsync(evenementParams)
 }
 
 const enregistreEvenementReponse = async () => {
   const evenementParams = getEvenementResponseParams(
-    situation,
+    situation.value,
     currentQuestion.value.nom_technique,
     selectedAnswer.value,
   )
@@ -126,18 +124,20 @@ const enregistreEvenementReponse = async () => {
 }
 
 const enregistreEvenementFinSituation = async () => {
-  const evenementParams = getEvenementFinSituationParams(nomTechniqueSituation)
+  const evenementParams = getEvenementFinSituationParams(nomTechniqueSituation.value)
   return mutation.mutateAsync(evenementParams)
 }
 
 const prevQuestion = () => {
   if (currentQuestionIndex.value > 0) {
     currentQuestionIndex.value--
+  } else {
+    emit('prevSituation')
   }
 }
 
 const labelBoutonSuivant = computed(() => {
-  if (currentQuestionIndex.value === questions.length - 1) {
+  if (currentQuestionIndex.value === questions.value.length - 1) {
     return 'Valider'
   } else {
     return 'Continuer'
@@ -151,8 +151,27 @@ watch(currentQuestion, (newQuestion) => {
   }
 })
 
+// Réinitialise l'état quand la situation ou l'index initial change
+watch(
+  [situation, initialQuestionIndexProp],
+  ([newSituation, initialIndex]) => {
+    if (newSituation) {
+      const questionsCount = newSituation.questions?.length ?? 0
+      if (initialIndex === -1 && questionsCount > 0) {
+        currentQuestionIndex.value = questionsCount - 1
+      } else if (initialIndex >= 0 && initialIndex < questionsCount) {
+        currentQuestionIndex.value = initialIndex
+      } else {
+        currentQuestionIndex.value = 0
+      }
+      answers.value = {}
+    }
+  },
+  { immediate: true },
+)
+
 onMounted(() => {
-  if (currentQuestionIndex.value === 0) {
+  if (currentQuestionIndex.value === 0 && situation.value) {
     enregistreEvenementDemarrage()
   }
 })
@@ -166,7 +185,7 @@ onMounted(() => {
       <Transition name="question-slide" mode="out-in">
         <div v-if="currentQuestion" :key="currentQuestion.nom_technique" class="questionnaire">
           <DsfrButton
-            :disabled="currentQuestionIndex === 0"
+            :disabled="!canPrevSituation && currentQuestionIndex === 0"
             label="< Précédent"
             @click="prevQuestion"
             tertiary
@@ -232,7 +251,9 @@ onMounted(() => {
 
 .question-slide-enter-active,
 .question-slide-leave-active {
-  transition: opacity 250ms ease, transform 250ms ease;
+  transition:
+    opacity 250ms ease,
+    transform 250ms ease;
 }
 
 .question-slide-enter-from {

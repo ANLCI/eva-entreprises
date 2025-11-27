@@ -38,15 +38,8 @@ test('Complète le premier questionnaire', async ({ page }) => {
 
   await page.click('button:has-text("Valider")');
 
-  // eslint-disable-next-line no-undef
-  const evaluationUrl = `${process.env.VITE_ADMIN_BASE_URL}/evaluations/${evaluationId}`
-  await page.route(evaluationUrl, async route => {
-    route.fulfill({
-      contentType: 'application/json',
-      body: JSON.stringify({}),
-    });
-  });
-  await page.waitForURL(evaluationUrl)
+  const questionDeuxiemeSituation = "Avez-vous parfois l'impression de devoir prendre plus de temps que nécessaire pour vous assurer que vos collaborateurs ou collaboratrices ont bien compris certaines informations ?"
+  await expect(page.locator('legend')).toHaveText(questionDeuxiemeSituation);
 });
 
 test('passe automatiquement la question radio puis affiche le bouton en revenant en arrière', async ({ page }) => {
@@ -61,7 +54,6 @@ test('passe automatiquement la question radio puis affiche le bouton en revenant
   await expect(selectors.legend).toHaveText('Quelle est la taille de votre entreprise/structure ?');
 
   await selectors.labels.first().click();
-  page.waitForFunction(() => document.querySelector('label')?.textContent?.includes('A quelle branche votre structure est-elle rattachée ?'))
 
   await selectors.boutonPrecedent.click();
   await expect(selectors.legend).toHaveText('Quelle est la taille de votre entreprise/structure ?');
