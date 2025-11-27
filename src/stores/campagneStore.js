@@ -17,6 +17,9 @@ export const useCampagneStore = defineStore('campagne', {
     setSituations(situations) {
       this.situations = situations
     },
+    setCodeSituationCourante(codeSituation) {
+      this.codeSituationCourante = codeSituation
+    },
     getCampagne() {
       if (!this.libelle || !this.code || !this.situations) return null
 
@@ -40,6 +43,24 @@ export const useCampagneStore = defineStore('campagne', {
     },
     getSituations() {
       return this.situations
+    },
+    getSituationIndex(situation) {
+      if (this.situations == null) return
+
+      return this.situations.findIndex((s) => s.id === situation.id)
+    },
+    getSituationSuivante(situation) {
+      const index = this.getSituationIndex(situation)
+
+      if (index === null || index < 0 || index >= this.situations.length - 1) return null
+
+      return this.situations[index + 1]
+    },
+    getSituationPrecedente(situation) {
+      const index = this.getSituationIndex(situation)
+
+      if (index === null || index < 0 || index >= this.situations.length - 1) return null
+      return this.situations[index - 1]
     },
   },
 })
