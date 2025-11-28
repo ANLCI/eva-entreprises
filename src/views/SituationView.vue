@@ -6,11 +6,13 @@ import QuestionnaireSideMenu from './../components/QuestionnaireSideMenu.vue'
 import QuestionnaireForm from './../components/QuestionnaireForm.vue'
 import { useCampagneStore } from './../stores/campagneStore'
 import { useEvaluationStore } from './../stores/evaluationStore'
+import { useEvenementStore } from './../stores/evenementStore'
 
 const route = useRoute()
 const router = useRouter()
 const campagneStore = useCampagneStore()
 const evaluationStore = useEvaluationStore()
+const evenementStore = useEvenementStore()
 
 let situation = computed(() => {
   if (route.params.id) {
@@ -50,6 +52,8 @@ const finSituation = () => {
   const nextSituation = campagneStore.getSituationSuivante(situation.value)
   if (nextSituation) {
     campagneStore.setCodeSituationCourante(nextSituation.code)
+    evenementStore.resetPosition()
+    evenementStore.resetSessionId()
     router.push(`/situations/${nextSituation.id}`)
   } else {
     redirigeVersEvaluation()
