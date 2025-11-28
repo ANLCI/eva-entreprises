@@ -59,7 +59,7 @@ export const useCampagneStore = defineStore('campagne', {
     getSituationPrecedente(situation) {
       const index = this.getSituationIndex(situation)
 
-      if (index === null || index < 0 || index >= this.situations.length - 1) return null
+      if (index === null || index < 0 || index > this.situations.length - 1) return null
       return this.situations[index - 1]
     },
   },
