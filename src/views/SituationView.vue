@@ -60,10 +60,6 @@ const setCurrentQuestion = (question) => {
   currentQuestion.value = question
 }
 
-const canPrevSituation = computed(() => {
-  return campagneStore.getSituationPrecedente(situation.value) !== null
-})
-
 const prevSituation = () => {
   const previousSituation = campagneStore.getSituationPrecedente(situation.value)
   router.push({
@@ -78,7 +74,6 @@ const prevSituation = () => {
     <QuestionnaireSideMenu class="side-menu" :current-question="currentQuestion" />
     <QuestionnaireForm
       :situation="situation"
-      :canPrevSituation="canPrevSituation"
       :initial-question-index="initialQuestionIndex"
       @updateCurrentQuestion="setCurrentQuestion"
       @prevSituation="prevSituation"

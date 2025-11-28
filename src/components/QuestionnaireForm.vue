@@ -19,7 +19,7 @@ import { useAlertStore } from '../stores/alertStore'
 
 import QuestionInput from './QuestionInput.vue'
 
-const props = defineProps(['situation', 'canPrevSituation', 'initialQuestionIndex'])
+const props = defineProps(['situation', 'initialQuestionIndex'])
 
 const router = useRouter()
 const evaluationStore = useEvaluationStore()
@@ -33,7 +33,6 @@ const initialQuestionIndexProp = computed(() => {
   const parsed = Number(value)
   return Number.isNaN(parsed) ? 0 : parsed
 })
-const canPrevSituation = computed(() => props.canPrevSituation)
 const nomTechniqueSituation = computed(() => situation.value?.nom_technique)
 
 const questions = computed(() => situation.value?.questions)
@@ -185,7 +184,7 @@ onMounted(() => {
       <Transition name="question-slide" mode="out-in">
         <div v-if="currentQuestion" :key="currentQuestion.nom_technique" class="questionnaire">
           <DsfrButton
-            :disabled="!canPrevSituation && currentQuestionIndex === 0"
+            :disabled="currentQuestionIndex === 0"
             label="< Précédent"
             @click="prevQuestion"
             tertiary
