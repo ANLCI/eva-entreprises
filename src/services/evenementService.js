@@ -81,15 +81,22 @@ export function getEvenementResponseParams(situation, questionNomTechnique, repo
     reponseId,
   )
 
+  // Protection : si reponseDetails est null (question ou réponse n'existe pas dans les données locales),
+  // on ne fait pas le spread pour éviter les erreurs
+  const donnees = {
+    question: questionNomTechnique,
+    reponse: reponseId,
+    scoreMax: scoreMax,
+  }
+  
+  if (reponseDetails) {
+    Object.assign(donnees, reponseDetails)
+  }
+
   return {
     ...baseParams,
     ...{
-      donnees: {
-        question: questionNomTechnique,
-        reponse: reponseId,
-        scoreMax: scoreMax,
-        ...reponseDetails,
-      },
+      donnees: donnees,
     },
   }
 }

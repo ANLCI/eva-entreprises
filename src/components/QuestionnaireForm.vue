@@ -13,6 +13,7 @@ import {
 
 import ProgressBar from './../components/ProgressBar.vue'
 import { determineQuestionInputType } from '../utils/questionInputType'
+import { detailPourQuestion } from '../services/questionService'
 
 import { useEvaluationStore } from './../stores/evaluationStore'
 import { useAlertStore } from '../stores/alertStore'
@@ -66,6 +67,7 @@ const mutation = useMutation({
 const currentQuestionIndex = ref(0)
 const answers = ref({})
 const isLoading = ref(false)
+const isFinishingSituation = ref(false) // Garde-fou pour éviter les appels multiples à finSituation
 
 const currentQuestion = computed(() => {
   return questions.value ? questions.value[currentQuestionIndex.value] : null
@@ -114,6 +116,25 @@ const enregistreEvenementAffichageQuestion = async (question) => {
 }
 
 const enregistreEvenementReponse = async () => {
+  // Protection : vérifier que la question existe dans les données locales
+  if (!currentQuestion.value) {
+    console.warn('Question actuelle non définie')
+    return Promise.resolve()
+  }
+  
+  const questionDetails = detailPourQuestion(
+    situation.value?.nom_technique_sans_variant,
+    currentQuestion.value.nom_technique
+  )
+  
+  // Si la question n'existe pas dans les données locales, on enregistre quand même l'événement
+  // mais avec un avertissement
+  if (!questionDetails) {
+    console.warn(
+      `Question ${currentQuestion.value.nom_technique} non trouvée dans les données locales pour la situation ${situation.value?.nom_technique_sans_variant}`
+    )
+  }
+  
   const evenementParams = getEvenementResponseParams(
     situation.value,
     currentQuestion.value.nom_technique,
@@ -143,18 +164,53 @@ const labelBoutonSuivant = computed(() => {
   }
 })
 
+let lastLoggedQuestionNomTechnique = null // Garde-fou pour éviter les logs multiples pour la même question
+
 watch(currentQuestion, (newQuestion) => {
-  if (newQuestion) {
-    emit('updateCurrentQuestion', newQuestion)
-    enregistreEvenementAffichageQuestion(newQuestion)
+  // Protection : ne pas traiter si c'est la même question ou si on est en train de finir la situation
+  if (!newQuestion || isFinishingSituation.value) {
+    return
   }
+  
+  // Protection : vérifier que la question existe dans les données locales
+  const questionDetails = detailPourQuestion(
+    situation.value?.nom_technique_sans_variant,
+    newQuestion.nom_technique
+  )
+  
+  if (!questionDetails) {
+    console.warn(
+      `Question ${newQuestion.nom_technique} non trouvée dans les données locales pour la situation ${situation.value?.nom_technique_sans_variant}. La question sera ignorée.`
+    )
+    // On émet quand même l'événement pour mettre à jour l'UI, mais on n'enregistre pas l'événement d'affichage
+    emit('updateCurrentQuestion', newQuestion)
+    return
+  }
+  
+  // Protection : éviter les appels multiples pour la même question
+  if (newQuestion.nom_technique === lastLoggedQuestionNomTechnique) {
+    return
+  }
+  
+  lastLoggedQuestionNomTechnique = newQuestion.nom_technique
+  emit('updateCurrentQuestion', newQuestion)
+  enregistreEvenementAffichageQuestion(newQuestion)
 })
 
 // Réinitialise l'état quand la situation ou l'index initial change
 watch(
   [situation, initialQuestionIndexProp],
-  ([newSituation, initialIndex]) => {
+  ([newSituation, initialIndex], [oldSituation, oldInitialIndex]) => {
+    // Protection : ne pas réinitialiser si c'est la même situation et le même index
+    if (newSituation && oldSituation && newSituation.id === oldSituation.id && initialIndex === oldInitialIndex) {
+      return
+    }
+    
     if (newSituation) {
+      // Réinitialiser les flags quand on change de situation
+      isFinishingSituation.value = false
+      lastLoggedQuestionNomTechnique = null
+      
       const questionsCount = newSituation.questions?.length ?? 0
       if (initialIndex === -1 && questionsCount > 0) {
         currentQuestionIndex.value = questionsCount - 1
