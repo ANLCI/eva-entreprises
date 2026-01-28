@@ -32,7 +32,7 @@ test('Complète le premier questionnaire', async ({ page }) => {
   await selectors.labels.first().click();
 
   page.waitForFunction(() => document.querySelector('label')?.textContent?.includes('A quelle branche votre structure est-elle rattachée ?'))
-  await expect(page.locator(sousMenuThematiqueActif)).toHaveText("Gestion des compétences")
+  await expect(page.locator(sousMenuThematiqueActif)).toHaveText("Profil des collaborateurs")
 
   await selectors.champTexte.fill('Finance');
 

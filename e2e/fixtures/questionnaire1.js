@@ -1,7 +1,7 @@
 export const mockApiQuestionnaire1 = [
   {
     "id": "c325e445-6546-4453-a90e-97150abce34e",
-    "nom_technique": "Q1PG01",
+    "nom_technique": "Q1IC01",
     "metacompetence": null,
     "type_qcm": "standard",
     "description": "",
@@ -17,7 +17,7 @@ export const mockApiQuestionnaire1 = [
     "choix": [
       {
         "id": "36aad351-6f65-4695-9acf-a914e81e2238",
-        "nom_technique": "Q1PG01R1",
+        "nom_technique": "Q1IC01R01",
         "intitule": "250 salariés et +",
         "type_choix": "bon",
         "position": 1,
@@ -25,7 +25,7 @@ export const mockApiQuestionnaire1 = [
       },
       {
         "id": "4dbbb5da-3a7d-4d74-afac-fd82c88d7b43",
-        "nom_technique": "Q1PG01R2",
+        "nom_technique": "Q1IC01R02",
         "intitule": "50 à 249 salariés",
         "type_choix": "bon",
         "position": 2,
@@ -35,7 +35,7 @@ export const mockApiQuestionnaire1 = [
   },
   {
     "id": "6746bda0-5e5c-4eda-a201-af6b68a47efd",
-    "nom_technique": "Q1PG09",
+    "nom_technique": "Q1PC01",
     "suffix_reponse": "",
     "description": "",
     "metacompetence": null,
