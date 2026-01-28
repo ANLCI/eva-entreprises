@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch, defineProps } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { recupereSituations } from './../services/campagneService'
 import { detailPourQuestion } from './../services/questionService'
 import { thematiques } from './../data/thematiques.js'
@@ -7,7 +7,12 @@ import { useRoute } from 'vue-router'
 
 const menuItems = ref([])
 const route = useRoute()
-const props = defineProps(['currentQuestion'])
+const props = defineProps({
+  currentQuestion: {
+    type: Object,
+    default: null,
+  },
+})
 
 let situationCourante
 let situations = []
@@ -66,12 +71,12 @@ watch(
 )
 
 watch(
-  () => props.currentQuestion,
-  (newQuestion) => {
-    if (newQuestion && situationCourante) {
+  () => props.currentQuestion?.nom_technique,
+  (nomTechnique) => {
+    if (nomTechnique && situationCourante) {
       const questionData = detailPourQuestion(
         situationCourante.nom_technique_sans_variant,
-        newQuestion.nom_technique,
+        nomTechnique,
       )
       const thematiqueText = questionData.thematique
       const situationItem = menuItems.value.find((item) => item.active === true)

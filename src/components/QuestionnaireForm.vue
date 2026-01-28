@@ -47,7 +47,7 @@ watch(
   { immediate: true },
 )
 
-const emit = defineEmits(['updateCurrentQuestion'])
+const emit = defineEmits(['updateCurrentQuestion', 'finSituation', 'prevSituation'])
 
 const alertStore = useAlertStore()
 
