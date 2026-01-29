@@ -174,6 +174,8 @@ watch(
 @media screen and (max-width: 768px) {
   .questionnaire-side-menu-header {
     padding-top: 1.5rem;
+    padding-right: 0;
+    box-shadow: none;
   }
 
   .questionnaire-side-menu {
