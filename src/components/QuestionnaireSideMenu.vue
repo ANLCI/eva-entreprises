@@ -105,13 +105,15 @@ watch(
 
 <template>
   <div class="questionnaire-side-menu-container">
-    <div v-if="opcoFinanceur && opcoFinanceur.logo_url" class="questionnaire-side-menu-partner">
-      <p class="questionnaire-side-menu-partner-title fr-text">En partenariat avec</p>
-      <img
-        :src="opcoFinanceur.logo_url"
-        :alt="opcoFinanceur.nom"
-        class="questionnaire-side-menu-partner-logo"
-      />
+    <div v-if="opcoFinanceur && opcoFinanceur.logo_url" class="questionnaire-side-menu-header">
+      <div class="questionnaire-side-menu-partner">
+        <p class="questionnaire-side-menu-partner-title fr-text">En partenariat avec</p>
+        <img
+          :src="opcoFinanceur.logo_url"
+          :alt="opcoFinanceur.nom"
+          class="questionnaire-side-menu-partner-logo"
+        />
+      </div>
     </div>
     <DsfrSideMenu class="questionnaire-side-menu" :menu-items="menuItems" />
   </div>
@@ -121,11 +123,18 @@ watch(
 .questionnaire-side-menu-container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+}
+
+.questionnaire-side-menu-header {
+  display: flex;
+  flex-direction: column;
+  padding-top: 2.5rem;
+  padding-right: 1.5rem;
+  padding-bottom: 1.5rem;
+  box-shadow: inset -1px 0 0 0 var(--border-default-grey);
 }
 
 .questionnaire-side-menu-partner {
-  margin-top: 2.5rem;
   display: flex;
   padding: var(--Space-3W, 1.5rem);
   flex-direction: column;
@@ -135,7 +144,6 @@ watch(
   align-self: stretch;
   border: 1px solid var(--light-decisions-border-border-default-grey, #ddd);
   background: var(--light-decisions-background-background-alt-grey, #f6f6f6);
-  margin-right: 1.5rem;
 }
 
 .questionnaire-side-menu-partner-title {
@@ -164,14 +172,17 @@ watch(
 }
 
 @media screen and (max-width: 768px) {
-  .questionnaire-side-menu-partner {
-    margin-right: 0;
-    margin-top: 1.5rem;
+  .questionnaire-side-menu-header {
+    padding-top: 1.5rem;
   }
 
   .questionnaire-side-menu {
     padding-left: 0;
     margin-top: 0;
   }
+}
+
+.fr-sidemenu__title {
+  margin: 0;
 }
 </style>
