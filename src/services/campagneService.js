@@ -24,6 +24,7 @@ export async function recupereCampagne(codeCampagne) {
   campagneStore.setLibelle(campagne.libelle)
   campagneStore.setCode(campagne.code)
   campagneStore.setSituations(campagne.situations)
+  campagneStore.setOpcoFinanceur(campagne.opco_financeur)
   return campagne
 }
 

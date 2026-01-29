@@ -4,6 +4,7 @@ export const useCampagneStore = defineStore('campagne', {
   state: () => ({
     libelle: null,
     code: null,
+    opcoFinanceur: null,
     situations: null,
     codeSituationCourante: null,
   }),
@@ -13,6 +14,12 @@ export const useCampagneStore = defineStore('campagne', {
     },
     setCode(code) {
       this.code = code
+    },
+    setOpcoFinanceur(opcoFinanceur) {
+      this.opcoFinanceur = opcoFinanceur
+    },
+    getOpcoFinanceur() {
+      return this.opcoFinanceur
     },
     setSituations(situations) {
       this.situations = situations
@@ -26,6 +33,7 @@ export const useCampagneStore = defineStore('campagne', {
       return {
         libelle: this.libelle,
         code: this.code,
+        opcoFinanceur: this.opcoFinanceur,
         situations: this.situations,
       }
     },

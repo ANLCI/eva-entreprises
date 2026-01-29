@@ -88,7 +88,7 @@ export function getEvenementResponseParams(situation, questionNomTechnique, repo
     reponse: reponseId,
     scoreMax: scoreMax,
   }
-  
+
   if (reponseDetails) {
     Object.assign(donnees, reponseDetails)
   }

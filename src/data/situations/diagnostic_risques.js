@@ -33,7 +33,7 @@ export const Q1IC03 = {
     { nom_technique: 'Q1IC03R01', intitule: 'Agriculture et pêche', score: 2 },
     { nom_technique: 'Q1IC03R02', intitule: 'Agro-alimentaire', score: 2 },
     { nom_technique: 'Q1IC03R03', intitule: 'Aide à domicile', score: 2 },
-	{ nom_technique: 'Q1IC03R04', intitule: 'Animation, loisirs et spectacles', score: 0 },
+    { nom_technique: 'Q1IC03R04', intitule: 'Animation, loisirs et spectacles', score: 0 },
     { nom_technique: 'Q1IC03R05', intitule: 'BTP', score: 2 },
     { nom_technique: 'Q1IC03R06', intitule: 'Collectivités', score: 1 },
     { nom_technique: 'Q1IC03R07', intitule: 'Commerce', score: 0 },

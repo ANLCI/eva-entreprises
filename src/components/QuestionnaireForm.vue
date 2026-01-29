@@ -121,20 +121,20 @@ const enregistreEvenementReponse = async () => {
     console.warn('Question actuelle non définie')
     return Promise.resolve()
   }
-  
+
   const questionDetails = detailPourQuestion(
     situation.value?.nom_technique_sans_variant,
-    currentQuestion.value.nom_technique
+    currentQuestion.value.nom_technique,
   )
-  
+
   // Si la question n'existe pas dans les données locales, on enregistre quand même l'événement
   // mais avec un avertissement
   if (!questionDetails) {
     console.warn(
-      `Question ${currentQuestion.value.nom_technique} non trouvée dans les données locales pour la situation ${situation.value?.nom_technique_sans_variant}`
+      `Question ${currentQuestion.value.nom_technique} non trouvée dans les données locales pour la situation ${situation.value?.nom_technique_sans_variant}`,
     )
   }
-  
+
   const evenementParams = getEvenementResponseParams(
     situation.value,
     currentQuestion.value.nom_technique,
@@ -171,27 +171,27 @@ watch(currentQuestion, (newQuestion) => {
   if (!newQuestion || isFinishingSituation.value) {
     return
   }
-  
+
   // Protection : vérifier que la question existe dans les données locales
   const questionDetails = detailPourQuestion(
     situation.value?.nom_technique_sans_variant,
-    newQuestion.nom_technique
+    newQuestion.nom_technique,
   )
-  
+
   if (!questionDetails) {
     console.warn(
-      `Question ${newQuestion.nom_technique} non trouvée dans les données locales pour la situation ${situation.value?.nom_technique_sans_variant}. La question sera ignorée.`
+      `Question ${newQuestion.nom_technique} non trouvée dans les données locales pour la situation ${situation.value?.nom_technique_sans_variant}. La question sera ignorée.`,
     )
     // On émet quand même l'événement pour mettre à jour l'UI, mais on n'enregistre pas l'événement d'affichage
     emit('updateCurrentQuestion', newQuestion)
     return
   }
-  
+
   // Protection : éviter les appels multiples pour la même question
   if (newQuestion.nom_technique === lastLoggedQuestionNomTechnique) {
     return
   }
-  
+
   lastLoggedQuestionNomTechnique = newQuestion.nom_technique
   emit('updateCurrentQuestion', newQuestion)
   enregistreEvenementAffichageQuestion(newQuestion)
@@ -202,15 +202,20 @@ watch(
   [situation, initialQuestionIndexProp],
   ([newSituation, initialIndex], [oldSituation, oldInitialIndex]) => {
     // Protection : ne pas réinitialiser si c'est la même situation et le même index
-    if (newSituation && oldSituation && newSituation.id === oldSituation.id && initialIndex === oldInitialIndex) {
+    if (
+      newSituation &&
+      oldSituation &&
+      newSituation.id === oldSituation.id &&
+      initialIndex === oldInitialIndex
+    ) {
       return
     }
-    
+
     if (newSituation) {
       // Réinitialiser les flags quand on change de situation
       isFinishingSituation.value = false
       lastLoggedQuestionNomTechnique = null
-      
+
       const questionsCount = newSituation.questions?.length ?? 0
       if (initialIndex === -1 && questionsCount > 0) {
         currentQuestionIndex.value = questionsCount - 1
