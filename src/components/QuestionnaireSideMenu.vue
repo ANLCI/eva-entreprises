@@ -105,8 +105,8 @@ watch(
 
 <template>
   <div class="questionnaire-side-menu-container">
-    <div v-if="opcoFinanceur && opcoFinanceur.logo_url" class="questionnaire-side-menu-header">
-      <div class="questionnaire-side-menu-partner">
+    <div class="questionnaire-side-menu-header">
+      <div v-if="opcoFinanceur && opcoFinanceur.logo_url" class="questionnaire-side-menu-partner">
         <p class="questionnaire-side-menu-partner-title fr-text">En partenariat avec</p>
         <img
           :src="opcoFinanceur.logo_url"
