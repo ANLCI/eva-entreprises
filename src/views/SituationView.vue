@@ -74,9 +74,14 @@ const prevSituation = () => {
 </script>
 
 <template>
-  <div class="page-situation" v-if="situation">
-    <QuestionnaireSideMenu class="side-menu" :current-question="currentQuestion" />
+  <div class="page-situation fr-container" v-if="situation">
+    <QuestionnaireSideMenu
+      class="side-menu"
+      :current-question="currentQuestion"
+      :opco-financeur="campagneStore.getOpcoFinanceur()"
+    />
     <QuestionnaireForm
+      class="form"
       :situation="situation"
       :initial-question-index="initialQuestionIndex"
       @updateCurrentQuestion="setCurrentQuestion"
@@ -92,11 +97,11 @@ const prevSituation = () => {
 }
 
 .side-menu {
-  min-width: 440px;
+  width: 384px;
 }
 
 .form {
-  flex-grow: 1;
+  flex: 1;
 }
 
 @media screen and (max-width: 768px) {
@@ -106,6 +111,7 @@ const prevSituation = () => {
 
   .side-menu {
     min-width: auto;
+    width: 100%;
   }
 }
 </style>

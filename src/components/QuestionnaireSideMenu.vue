@@ -12,6 +12,11 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  opcoFinanceur: {
+    type: Object,
+    required: false,
+    default: null,
+  },
 })
 
 let situationCourante
@@ -99,14 +104,59 @@ watch(
 </script>
 
 <template>
-  <DsfrSideMenu class="questionnaire-side-menu" :menu-items="menuItems" />
+  <div class="questionnaire-side-menu-container">
+    <div v-if="opcoFinanceur && opcoFinanceur.logo_url" class="questionnaire-side-menu-partner">
+      <p class="questionnaire-side-menu-partner-title fr-text">En partenariat avec</p>
+      <img
+        :src="opcoFinanceur.logo_url"
+        :alt="opcoFinanceur.nom"
+        class="questionnaire-side-menu-partner-logo"
+      />
+    </div>
+    <DsfrSideMenu class="questionnaire-side-menu" :menu-items="menuItems" />
+  </div>
 </template>
 
 <style>
+.questionnaire-side-menu-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.questionnaire-side-menu-partner {
+  margin-top: 2.5rem;
+  display: flex;
+  padding: var(--Space-3W, 1.5rem);
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--Space-2W, 1rem);
+  align-self: stretch;
+  border: 1px solid var(--light-decisions-border-border-default-grey, #ddd);
+  background: var(--light-decisions-background-background-alt-grey, #f6f6f6);
+  margin-right: 1.5rem;
+}
+
+.questionnaire-side-menu-partner-title {
+  color: var(--light-decisions-text-text-default-grey, #3a3a3a);
+
+  /* 2.Corps de texte/MD - Texte standard/Desktop & Mobile - Bold */
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 150% */
+  margin: 0;
+}
+
+.questionnaire-side-menu-partner-logo {
+  width: auto;
+  height: 56px;
+  object-fit: contain;
+}
+
 .questionnaire-side-menu {
-  margin-top: var(--progress-bar-height);
   padding-right: 0;
-  padding-left: 1.5rem;
 }
 
 .questionnaire-side-menu .fr-sidemenu__item a {
@@ -114,6 +164,11 @@ watch(
 }
 
 @media screen and (max-width: 768px) {
+  .questionnaire-side-menu-partner {
+    margin-right: 0;
+    margin-top: 1.5rem;
+  }
+
   .questionnaire-side-menu {
     padding-left: 0;
     margin-top: 0;
